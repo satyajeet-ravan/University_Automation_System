@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "seed:curriculum": "node scripts/seed-curriculum.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
