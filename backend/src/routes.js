@@ -16,6 +16,7 @@ import { createStudentEnrollmentsRouter } from './student-enrollments.js';
 import { attachEnrollments } from './student-enrollment-loader.js';
 import { resolveCurriculum } from './curriculum.js';
 import { createStudentPhotoHandlers } from './student-photo.js';
+import { createExamFeedbackRouter } from './exam-feedback.js';
 
 const router = Router();
 
@@ -79,6 +80,11 @@ router.use(
 router.use(
   '/students',
   createStudentEnrollmentsRouter(supabaseAdmin)
+);
+
+router.use(
+  '/exam-feedback',
+  createExamFeedbackRouter(supabaseAdmin, studentPhoto)
 );
 
 async function validateStudentPlacement(departmentId, courseId) {

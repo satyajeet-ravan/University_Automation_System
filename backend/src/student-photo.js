@@ -71,6 +71,20 @@ export function createStudentPhotoHandlers(supabaseAdmin) {
       }
     },
 
+    // Raw photo bytes (used for the hall ticket), or null if none is stored.
+    async download(studentId) {
+      try {
+        const { data, error } = await supabaseAdmin.storage
+          .from(BUCKET)
+          .download(studentId);
+
+        if (error || !data) return null;
+        return Buffer.from(await data.arrayBuffer());
+      } catch {
+        return null;
+      }
+    },
+
     async upload(profileId, body) {
       try {
         const encoded = typeof body?.data === 'string' ? body.data : '';
