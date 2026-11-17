@@ -231,25 +231,57 @@ export function createStudentEnrollmentsRouter(supabaseAdmin) {
             }
 
             if (enrollments.length) {
-                const rows = enrollments.map(item => ({
-                    student_id: studentId,
-                    course_id: item.course_id,
-                    semester_id: item.semester_id,
-                    status: 'enrolled',
-                    updated_at: new Date().toISOString()
-                }));
+                // Update-or-insert by hand rather than upsert, so saving does not
+                // depend on a database unique constraint existing for the pair.
+                const existingByKey = new Map(
+                    (existing || []).map(item => [`${item.course_id}:${item.semester_id}`, item])
+                );
+                const now = new Date().toISOString();
 
-                const { error } = await supabaseAdmin
-                    .from('student_semester_enrollments')
-                    .upsert(rows, {
-                        onConflict: 'student_id,course_id,semester_id'
-                    });
+                const reenrollIds = [];
+                const newRows = [];
 
-                if (error) {
-                    console.error('[enrollments] Save failed:', error.message);
-                    return res.status(500).json({
-                        error: 'Could not save course enrollments. Check the enrollment table constraints.'
-                    });
+                for (const item of enrollments) {
+                    const match = existingByKey.get(`${item.course_id}:${item.semester_id}`);
+
+                    if (!match) {
+                        newRows.push({
+                            student_id: studentId,
+                            course_id: item.course_id,
+                            semester_id: item.semester_id,
+                            status: 'enrolled',
+                            updated_at: now
+                        });
+                    } else if (match.status !== 'enrolled') {
+                        reenrollIds.push(match.id);
+                    }
+                }
+
+                if (reenrollIds.length) {
+                    const { error } = await supabaseAdmin
+                        .from('student_semester_enrollments')
+                        .update({ status: 'enrolled', updated_at: now })
+                        .in('id', reenrollIds);
+
+                    if (error) {
+                        console.error('[enrollments] Re-enroll failed:', error.message);
+                        return res.status(500).json({
+                            error: 'Could not save course enrollments.'
+                        });
+                    }
+                }
+
+                if (newRows.length) {
+                    const { error } = await supabaseAdmin
+                        .from('student_semester_enrollments')
+                        .insert(newRows);
+
+                    if (error) {
+                        console.error('[enrollments] Save failed:', error.code, error.message);
+                        return res.status(500).json({
+                            error: 'Could not save course enrollments. Apply migration 013 in Supabase (it fixes the enrollment table constraints), then retry.'
+                        });
+                    }
                 }
             }
 

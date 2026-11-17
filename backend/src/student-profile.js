@@ -9,8 +9,7 @@ const STUDENT_PROFILE_SELECT = [
   'admission_year',
   'status',
   'department:departments(id, name, code)',
-  'course:courses(id, name, code, subjects(id, name, code, credits, status))',
-  'enrollments:student_semester_enrollments(id, status, course_id, semester_id, course:courses(id, name, code, department:departments(id, name, code), subjects(id, name, code, credits, status)), semester:semesters(id, label, semester_number, academic_year:academic_years(id, label, year_code)))'
+  'course:courses(id, name, code, subjects(id, name, code, credits, status))'
 ].join(', ');
 
 function validatePhoneUpdate(body) {
@@ -89,6 +88,22 @@ export function createStudentProfileHandlers(supabaseAdmin) {
             }
           };
         }
+
+        const { data: enrollments, error: enrollmentsError } =
+          await supabaseAdmin
+            .from('student_semester_enrollments')
+            .select('id, status, course_id, semester_id, course:courses(id, name, code, department:departments(id, name, code), subjects(id, name, code, credits, status)), semester:semesters(id, label, semester_number, academic_year:academic_years(id, label, year_code))')
+            .eq('student_id', student.id)
+            .eq('status', 'enrolled');
+
+        if (enrollmentsError) {
+          console.error(
+            '[profile] Could not load enrollments:',
+            enrollmentsError.message
+          );
+        }
+
+        student.enrollments = enrollments || [];
 
         return {
           status: 200,

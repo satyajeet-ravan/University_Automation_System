@@ -13,6 +13,7 @@ import { createFacultyHandlers } from './faculty.js';
 import { createFacultyManagementRouter } from './faculty-management.js';
 import { createFacultyAttendanceRouter } from './faculty-attendance.js';
 import { createStudentEnrollmentsRouter } from './student-enrollments.js';
+import { attachEnrollments } from './student-enrollment-loader.js';
 
 const router = Router();
 
@@ -21,7 +22,7 @@ const studentProfile = createStudentProfileHandlers(supabaseAdmin);
 const faculty = createFacultyHandlers(supabaseAdmin);
 
 const STUDENT_SELECT =
-  'id, student_code, profile_id, department_id, course_id, full_name, email, phone, admission_year, status, created_at, updated_at, department:departments(id, name, code), course:courses(id, name, code), enrollments:student_semester_enrollments(id, status, course_id, semester_id, course:courses(id, name, code), semester:semesters(id, label, semester_number))';
+  'id, student_code, profile_id, department_id, course_id, full_name, email, phone, admission_year, status, created_at, updated_at, department:departments(id, name, code), course:courses(id, name, code)';
 
 // Express 4 does not catch rejected promises from async handlers; without this
 // a transient network failure would crash the whole API process.
@@ -506,6 +507,8 @@ router.get(
         });
       }
 
+      await attachEnrollments(supabaseAdmin, students.data || []);
+
       return res.json({
         students: students.data || [],
         totalCount: total.count || 0,
@@ -558,6 +561,8 @@ router.get(
           error: 'Student record not found.'
         });
       }
+
+      await attachEnrollments(supabaseAdmin, data);
 
       return res.json({ student: data });
     } catch {
