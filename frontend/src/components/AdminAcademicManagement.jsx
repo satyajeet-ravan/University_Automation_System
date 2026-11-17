@@ -144,7 +144,7 @@ function semesterLabel(semester) {
       ? `Semester ${semester.semester_number}`
       : 'Semester');
 
-  return yearLabel ? `${yearLabel} — ${label}` : label;
+  return yearLabel ? `${yearLabel} - ${label}` : label;
 }
 
 function rowLabel(section, item) {
@@ -153,7 +153,7 @@ function rowLabel(section, item) {
       return `${item.label} (${item.year_code})`;
 
     case 'semesters':
-      return `${item.academic_year?.label || 'Academic year'} — ${item.label}`;
+      return `${item.academic_year?.label || 'Academic year'} - ${item.label}`;
 
     case 'departments':
       return `${item.name} (${item.code})`;
@@ -280,7 +280,6 @@ function AcademicFields({ section, form, data, errors, onChange }) {
             label: item => `${item.name} (${item.code})`
           })}
 
-          {/* NEW: Semester assignment */}
           {field('semester_id', 'Semester', 'select', {
             items: activeSemesters,
             label: semester => {
@@ -293,7 +292,7 @@ function AcademicFields({ section, form, data, errors, onChange }) {
                 `Semester ${semester.semester_number}`;
 
               return academicYear
-                ? `${academicYear} — ${label}`
+                ? `${academicYear} - ${label}`
                 : label;
             }
           })}
@@ -319,7 +318,6 @@ function AcademicFields({ section, form, data, errors, onChange }) {
             maxLength: 30
           })}
 
-          {/* Multi-professor assignment */}
           <label className="academic-field faculty-multiselect-field">
             <span>Professor(s)</span>
 
@@ -347,7 +345,7 @@ function AcademicFields({ section, form, data, errors, onChange }) {
             >
               {activeFaculty.map(person => (
                 <option key={person.id} value={person.id}>
-                  {person.full_name} — {person.designation || 'Faculty'}
+                  {person.full_name} - {person.designation || 'Faculty'}
                   {person.faculty_code
                     ? ` (${person.faculty_code})`
                     : ''}
@@ -687,7 +685,7 @@ export default function AdminAcademicManagement({ token }) {
               }
             >
               {saving ? (
-                'Saving…'
+                'Saving...'
               ) : editing ? (
                 'Save changes'
               ) : (
@@ -709,7 +707,7 @@ export default function AdminAcademicManagement({ token }) {
           {loading ? (
             <div className="empty-state">
               <RefreshCw size={22} />
-              <span>Loading academic records…</span>
+              <span>Loading academic records...</span>
             </div>
           ) : rows.length ? (
             <div className="table-wrap">
@@ -837,7 +835,7 @@ export default function AdminAcademicManagement({ token }) {
         <span>
           Each course is associated with a semester and can have
           multiple professors. Assignments are saved in Supabase
-          and displayed in the assigned professors’ Faculty Dashboards.
+          and displayed in the assigned professors' Faculty Dashboards.
         </span>
       </div>
     </section>
