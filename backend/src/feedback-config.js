@@ -17,6 +17,12 @@ export const FEEDBACK_LEVELS = [
 
 export const EXAM_TYPES = ['MST', 'ESE'];
 
+// Laboratory courses have codes ending in L (for example R5IT3001L). They have
+// no written exam, so they are left off the hall ticket.
+export function isLabCourse(code) {
+  return /L$/i.test(String(code || '').trim());
+}
+
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d(:00)?$/;
 

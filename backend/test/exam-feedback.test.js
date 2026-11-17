@@ -4,6 +4,7 @@ import {
   FEEDBACK_CRITERIA,
   formatDateDmy,
   formatTime12,
+  isLabCourse,
   normalizeRatings,
   toRoman,
   validDate,
@@ -40,6 +41,13 @@ test('exam dates and times are validated and formatted for the hall ticket', () 
   assert.equal(formatTime12('13:15'), '01:15 PM');
   assert.equal(formatTime12('00:05'), '12:05 AM');
   assert.equal(formatTime12('12:00:00'), '12:00 PM');
+});
+
+test('laboratory courses are recognised by their code', () => {
+  assert.equal(isLabCourse('R5IT3001L'), true);
+  assert.equal(isLabCourse('R5IT3001T'), false);
+  assert.equal(isLabCourse('R5IT2601P'), false);
+  assert.equal(isLabCourse(''), false);
 });
 
 test('semester numbers are shown as roman numerals', () => {
