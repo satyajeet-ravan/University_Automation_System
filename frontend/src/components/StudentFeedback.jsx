@@ -339,62 +339,86 @@ export default function StudentFeedback({ token }) {
                     nothing to rate. You can submit to get your hall ticket.
                   </p>
                 ) : (
-                  detail.items.map(item => (
-                    <article className="feedback-card" key={itemKey(item)}>
-                      <div className="feedback-card-head">
-                        <div>
-                          <strong>{item.course.name}</strong>
-                          <small className="academic-secondary">{item.course.code}</small>
-                        </div>
-                        <span className="feedback-teacher">
-                          {item.faculty.full_name}
-                          {item.faculty.designation
-                            ? `, ${item.faculty.designation}`
-                            : ''}
-                        </span>
-                      </div>
+                  <div className="feedback-matrix-wrap">
+                    <table className="feedback-matrix">
+                      <thead>
+                        <tr>
+                          <th className="fm-no">Sr No</th>
+                          <th className="fm-question">Question</th>
+                          {detail.items.map(item => (
+                            <th className="fm-subject" key={itemKey(item)}>
+                              <span className="fm-code">{item.course.code}</span>
+                              <strong>{item.course.name}</strong>
+                              <span className="fm-teacher">
+                                {item.faculty.full_name}
+                              </span>
+                              <span className="fm-exam">
+                                {round.exam_type} - Theory
+                              </span>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
 
-                      {detail.criteria.map(criterion => (
-                        <div className="feedback-row" key={criterion.key}>
-                          <span className="feedback-criterion">{criterion.label}</span>
+                      <tbody>
+                        {detail.criteria.map((criterion, index) => (
+                          <tr key={criterion.key}>
+                            <td className="fm-no">{index + 1}</td>
+                            <td className="fm-question">{criterion.label}</td>
 
-                          <div
-                            className="rating-group"
-                            role="radiogroup"
-                            aria-label={`${criterion.label} for ${item.course.name}`}
-                          >
-                            {detail.levels.map(level => {
-                              const selected =
-                                answers[itemKey(item)]?.ratings?.[criterion.key] ===
-                                level.value;
+                            {detail.items.map(item => {
+                              const value =
+                                answers[itemKey(item)]?.ratings?.[criterion.key] || '';
 
                               return (
-                                <button
-                                  type="button"
-                                  role="radio"
-                                  aria-checked={selected}
-                                  key={level.value}
-                                  className={`rating-option ${selected ? 'selected' : ''}`}
-                                  onClick={() => rate(item, criterion.key, level.value)}
-                                >
-                                  {level.label}
-                                </button>
+                                <td className="fm-cell" key={itemKey(item)}>
+                                  <select
+                                    value={value}
+                                    className={value ? 'answered' : ''}
+                                    aria-label={`${criterion.label} for ${item.course.name}`}
+                                    onChange={event =>
+                                      rate(
+                                        item,
+                                        criterion.key,
+                                        Number(event.target.value)
+                                      )
+                                    }
+                                  >
+                                    <option value="">Please select</option>
+                                    {detail.levels.map(level => (
+                                      <option key={level.value} value={level.value}>
+                                        {level.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </td>
                               );
                             })}
-                          </div>
-                        </div>
-                      ))}
+                          </tr>
+                        ))}
 
-                      <textarea
-                        className="feedback-comment"
-                        rows={2}
-                        maxLength={500}
-                        placeholder="Comments (optional)"
-                        value={answers[itemKey(item)]?.comments || ''}
-                        onChange={event => changeComment(item, event.target.value)}
-                      />
-                    </article>
-                  ))
+                        <tr>
+                          <td className="fm-no">{detail.criteria.length + 1}</td>
+                          <td className="fm-question">Comments (optional)</td>
+
+                          {detail.items.map(item => (
+                            <td className="fm-cell" key={itemKey(item)}>
+                              <textarea
+                                rows={2}
+                                maxLength={500}
+                                placeholder="Optional"
+                                aria-label={`Comments for ${item.course.name}`}
+                                value={answers[itemKey(item)]?.comments || ''}
+                                onChange={event =>
+                                  changeComment(item, event.target.value)
+                                }
+                              />
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 )}
 
                 <div className="feedback-submit-bar">
