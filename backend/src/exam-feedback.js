@@ -33,6 +33,11 @@ class HttpError extends Error {
   }
 }
 
+// PostgREST reports a missing table with this code (migration 014 not applied).
+function isMissingTable(error) {
+  return error?.code === 'PGRST205' || error?.code === '42P01';
+}
+
 function isPastDeadline(round) {
   return new Date(round.deadline).getTime() < Date.now();
 }
@@ -44,7 +49,14 @@ function acceptsSubmissions(round) {
 function check(result, message) {
   if (result.error) {
     console.error(`[exam-feedback] ${message}:`, result.error.message);
-    throw new HttpError(500, `Could not ${message}. Verify that migration 014 has been applied.`);
+    const missing = isMissingTable(result.error);
+    const failure = new HttpError(
+      500,
+      `Could not ${message}. Verify that migration 014 has been applied.`
+    );
+
+    failure.missingTable = missing;
+    throw failure;
   }
 
   return result.data;
@@ -602,14 +614,22 @@ export function createExamFeedbackRouter(db, photoHandlers) {
 
     if (!enrollments.length) return res.json({ rounds: [] });
 
-    const rounds = check(
-      await db
-        .from('exam_feedback_rounds')
-        .select(ROUND_SELECT)
-        .in('semester_id', [...new Set(enrollments.map(item => item.semester_id))])
-        .order('deadline', { ascending: false }),
-      'load feedback rounds'
-    );
+    let rounds;
+
+    try {
+      rounds = check(
+        await db
+          .from('exam_feedback_rounds')
+          .select(ROUND_SELECT)
+          .in('semester_id', [...new Set(enrollments.map(item => item.semester_id))])
+          .order('deadline', { ascending: false }),
+        'load feedback rounds'
+      );
+    } catch (error) {
+      // Before the feedback tables exist there is simply nothing to show.
+      if (error.missingTable) return res.json({ rounds: [] });
+      throw error;
+    }
 
     if (!rounds.length) return res.json({ rounds: [] });
 
