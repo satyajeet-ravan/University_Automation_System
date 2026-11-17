@@ -3,7 +3,7 @@ import {
   BookOpen, GraduationCap, LayoutDashboard, LogOut, ShieldCheck,
   Users, UserRound, RefreshCw, CircleAlert, CheckCircle2, Clock3, Shield,
   UserPlus, X, Search, Eye, Pencil, UserRoundPlus, ChevronLeft, ChevronRight,
-  CalendarDays, ClipboardCheck, Building2, Sun, Moon
+  CalendarDays, ClipboardCheck, Building2, Sun, Moon, Wallet
 } from 'lucide-react';
 import { supabase, supabaseConfigured } from './lib/supabase';
 import { apiRequest } from './lib/api';
@@ -1528,6 +1528,7 @@ export default function App() {
     timetable: 'Timetable',
     attendance: 'Attendance',
     calendar: 'Academic Calendar',
+    fees: 'Fees',
     registrations: 'Student verification',
     students: 'Student Management',
     facultyManagement: 'Faculty Management',
@@ -1591,6 +1592,14 @@ export default function App() {
               onClick={() => setView('calendar')}
             >
               <CalendarDays size={18} /> Academic Calendar
+            </button>
+
+            <button
+              className={`nav-item ${view === 'fees' ? 'active' : ''}`}
+              aria-current={view === 'fees' ? 'page' : undefined}
+              onClick={() => setView('fees')}
+            >
+              <Wallet size={18} /> Fees
             </button>
           </nav>
         ) : isFaculty ? (
@@ -2402,6 +2411,14 @@ export default function App() {
           />
         ) : view === 'attendance' && isActiveStudent ? (
           <StudentAttendancePanel state={studentAttendance} />
+        ) : view === 'fees' && isActiveStudent ? (
+          <EmptyPortalPanel
+            icon={Wallet}
+            title="Fees"
+            description="View your fee details and payments."
+            heading="To be implemented soon"
+            requirement="The fees module is not built yet. It will appear here once it is released."
+          />
         ) : view === 'calendar' && isActiveStudent ? (
           <EmptyPortalPanel
             icon={CalendarDays}
