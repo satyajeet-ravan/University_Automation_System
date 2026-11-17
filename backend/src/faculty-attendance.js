@@ -116,7 +116,7 @@ function generateAttendancePdf({ session, facultyEmail, records }) {
                 if (doc.y + rowHeight > 755) {
                     doc.addPage();
                     doc.font('Helvetica-Bold').fontSize(11)
-                        .text('Student Attendance — Continued');
+                        .text('Student Attendance - Continued');
                     doc.moveDown(0.5);
                     drawHeader();
                 }
@@ -124,10 +124,10 @@ function generateAttendancePdf({ session, facultyEmail, records }) {
                 const y = doc.y;
                 doc.font('Helvetica').fontSize(7);
                 doc.text(String(index + 1), x.no, y, { width: 20 });
-                doc.text(String(record.student_code || '—'), x.code, y, { width: 75 });
-                doc.text(String(record.full_name || '—'), x.name, y, { width: 135 });
-                doc.text(String(record.email || '—'), x.email, y, { width: 165 });
-                doc.text(String(record.attendance_status || '—').toUpperCase(), x.status, y, { width: 90 });
+                doc.text(String(record.student_code || '-'), x.code, y, { width: 75 });
+                doc.text(String(record.full_name || '-'), x.name, y, { width: 135 });
+                doc.text(String(record.email || '-'), x.email, y, { width: 165 });
+                doc.text(String(record.attendance_status || '-').toUpperCase(), x.status, y, { width: 90 });
                 doc.moveDown(1);
 
                 if (record.remarks) {
