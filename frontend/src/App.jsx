@@ -326,6 +326,9 @@ export default function App() {
     courses: [],
     semesters: []
   });
+  const [curriculum, setCurriculum] = useState([]);
+  const [enrollBranch, setEnrollBranch] = useState('');
+  const [enrollSemesterId, setEnrollSemesterId] = useState('');
   const [studentOptionsLoading, setStudentOptionsLoading] = useState(false);
   const [studentOptionsError, setStudentOptionsError] = useState('');
   const [studentsError, setStudentsError] = useState('');
@@ -670,6 +673,12 @@ export default function App() {
         courses: result.courses || [],
         semesters: result.semesters || []
       });
+
+      // The branch curriculum is optional: without it the enrollment form
+      // falls back to the courses assigned to the chosen semester.
+      apiRequest('/students/curriculum', { token: session.access_token })
+        .then(curriculumResult => setCurriculum(curriculumResult.programs || []))
+        .catch(() => setCurriculum([]));
     } catch (e) {
       setStudentOptionsError(e.message);
       setStudentOptions({
@@ -750,51 +759,118 @@ export default function App() {
     setSelectedStudent(null);
     setError('');
     setMessage('');
+    openEnrollmentForm();
     setStudentModal('add');
   }
 
-  function addStudentEnrollment() {
-    setStudentForm(current => ({
-      ...current,
-      enrollments: [...current.enrollments, { course_id: '', semester_id: '' }]
-    }));
+  function openEnrollmentForm() {
+    setEnrollBranch('');
+    setEnrollSemesterId('');
   }
 
-  function updateStudentEnrollment(index, field, value) {
-    setStudentForm(current => ({
-      ...current,
-      enrollments: current.enrollments.map((item, itemIndex) => {
-        if (itemIndex !== index) return item;
-
-        const next = { ...item, [field]: value };
-
-        // A course runs in the semester assigned to it in Academic Management.
-        if (field === 'course_id') {
-          const course = studentOptions.courses.find(
-            option => option.id === value
-          );
-          next.semester_id = course?.semester_id || '';
-        }
-
-        return next;
-      })
-    }));
+  // Branches offered by the selected department (all branches if none is chosen).
+  function enrollmentPrograms() {
+    return curriculum.filter(
+      program =>
+        !studentForm.department_id ||
+        program.department_id === studentForm.department_id
+    );
   }
 
-  function removeStudentEnrollment(index) {
-    setStudentForm(current => ({
-      ...current,
-      enrollments: current.enrollments.filter((_, itemIndex) => itemIndex !== index)
-    }));
-    setStudentFieldErrors(current => {
-      const next = { ...current };
-      delete next[`enrollment_course_${index}`];
-      delete next[`enrollment_semester_${index}`];
-      return next;
+  function selectedSemesterNumber() {
+    return studentOptions.semesters.find(
+      semester => semester.id === enrollSemesterId
+    )?.semester_number;
+  }
+
+  // Courses that can be picked for the chosen branch and semester.
+  function enrollmentCourses() {
+    if (!enrollSemesterId) return [];
+
+    if (enrollBranch) {
+      const program = curriculum.find(item => item.id === enrollBranch);
+      const number = selectedSemesterNumber();
+
+      return (
+        program?.semesters.find(item => item.number === number)?.courses || []
+      );
+    }
+
+    return studentOptions.courses.filter(
+      course => course.semester_id === enrollSemesterId
+    );
+  }
+
+  function chooseEnrollmentBranch(value) {
+    setEnrollBranch(value);
+
+    const program = curriculum.find(item => item.id === value);
+
+    if (program?.department_id && !studentForm.department_id) {
+      setStudentForm(current => ({
+        ...current,
+        department_id: program.department_id
+      }));
+    }
+  }
+
+  function toggleStudentEnrollment(courseId, checked) {
+    if (!enrollSemesterId) return;
+
+    setStudentForm(current => {
+      const others = current.enrollments.filter(
+        item =>
+          !(item.course_id === courseId && item.semester_id === enrollSemesterId)
+      );
+
+      return {
+        ...current,
+        enrollments: checked
+          ? [...others, { course_id: courseId, semester_id: enrollSemesterId }]
+          : others
+      };
     });
   }
 
+  function setAllStudentEnrollments(checked) {
+    if (!enrollSemesterId) return;
+
+    const courseIds = enrollmentCourses().map(course => course.id);
+
+    setStudentForm(current => {
+      const others = current.enrollments.filter(
+        item =>
+          item.semester_id !== enrollSemesterId ||
+          !courseIds.includes(item.course_id)
+      );
+
+      return {
+        ...current,
+        enrollments: checked
+          ? [
+            ...others,
+            ...courseIds.map(courseId => ({
+              course_id: courseId,
+              semester_id: enrollSemesterId
+            }))
+          ]
+          : others
+      };
+    });
+  }
+
+  function removeStudentEnrollment(courseId, semesterId) {
+    setStudentForm(current => ({
+      ...current,
+      enrollments: current.enrollments.filter(
+        item =>
+          !(item.course_id === courseId && item.semester_id === semesterId)
+      )
+    }));
+  }
+
   async function openStudentDetails(student, modalMode) {
+    openEnrollmentForm();
     setSelectedStudent(student);
     setStudentFieldErrors({});
     setError('');
@@ -904,29 +980,6 @@ export default function App() {
     if (studentForm.course_id && !studentForm.department_id) {
       errors.course_id = 'Select a department first.';
     }
-
-    const seenEnrollments = new Set();
-
-    studentForm.enrollments.forEach((item, index) => {
-      if (!item.course_id) {
-        errors[`enrollment_course_${index}`] = 'Select a course.';
-      }
-
-      if (!item.semester_id) {
-        errors[`enrollment_semester_${index}`] = 'Select a semester.';
-      }
-
-      if (item.course_id && item.semester_id) {
-        const key = `${item.course_id}:${item.semester_id}`;
-
-        if (seenEnrollments.has(key)) {
-          errors[`enrollment_course_${index}`] =
-            'This course is already selected for this semester.';
-        }
-
-        seenEnrollments.add(key);
-      }
-    });
 
     setStudentFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -2716,131 +2769,161 @@ export default function App() {
                 </select>
 
                 <div className="student-enrollments-editor">
-                  <div className="panel-heading">
-                    <div>
-                      <h3>Course Enrollments</h3>
-                      <p className="muted">
-                        Assign one or more courses to specific semesters.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      className="secondary-button"
-                      onClick={addStudentEnrollment}
-                      disabled={busy}
-                    >
-                      <UserPlus size={15} /> Add Course
-                    </button>
+                  <div>
+                    <h3>Course Enrollments</h3>
+                    <p className="muted">
+                      Choose the branch and semester once, then tick the
+                      courses the student takes in that semester.
+                    </p>
                   </div>
 
-                  {studentForm.enrollments.length === 0 && (
-                    <p className="muted">
-                      No course enrollments selected. Click Add Course to begin.
-                    </p>
+                  <div className="student-enrollment-pickers">
+                    <div>
+                      <label htmlFor="enrollment-branch">Branch</label>
+                      <select
+                        id="enrollment-branch"
+                        value={enrollBranch}
+                        onChange={event =>
+                          chooseEnrollmentBranch(event.target.value)
+                        }
+                      >
+                        <option value="">All courses in the semester</option>
+                        {enrollmentPrograms().map(program => (
+                          <option value={program.id} key={program.id}>
+                            {program.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="enrollment-semester">Semester</label>
+                      <select
+                        id="enrollment-semester"
+                        value={enrollSemesterId}
+                        onChange={event =>
+                          setEnrollSemesterId(event.target.value)
+                        }
+                      >
+                        <option value="">Select semester</option>
+                        {studentOptions.semesters.map(semester => {
+                          const year =
+                            semester.academic_year?.label ||
+                            semester.academic_year?.year_code;
+                          const label =
+                            semester.label ||
+                            `Semester ${semester.semester_number}`;
+
+                          return (
+                            <option value={semester.id} key={semester.id}>
+                              {year ? `${year} - ` : ''}{label}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                  </div>
+
+                  {enrollSemesterId && (
+                    <div className="student-enrollment-courses">
+                      {enrollmentCourses().length === 0 ? (
+                        <p className="muted">
+                          No courses are listed for this branch and semester.
+                        </p>
+                      ) : (
+                        <>
+                          <div className="student-enrollment-bulk">
+                            <button
+                              type="button"
+                              className="secondary-button"
+                              onClick={() => setAllStudentEnrollments(true)}
+                            >
+                              Select all
+                            </button>
+                            <button
+                              type="button"
+                              className="secondary-button"
+                              onClick={() => setAllStudentEnrollments(false)}
+                            >
+                              Clear
+                            </button>
+                          </div>
+
+                          {enrollmentCourses().map(course => (
+                            <label
+                              className="student-enrollment-course"
+                              key={course.id}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={studentForm.enrollments.some(
+                                  item =>
+                                    item.course_id === course.id &&
+                                    item.semester_id === enrollSemesterId
+                                )}
+                                onChange={event =>
+                                  toggleStudentEnrollment(
+                                    course.id,
+                                    event.target.checked
+                                  )
+                                }
+                              />
+                              <span>
+                                {course.name}
+                                {course.code ? ` (${course.code})` : ''}
+                              </span>
+                            </label>
+                          ))}
+                        </>
+                      )}
+                    </div>
                   )}
 
-                  {studentForm.enrollments.map((item, index) => {
-                    const availableCourses = studentOptions.courses.filter(
-                      course =>
-                        !studentForm.department_id ||
-                        course.department_id === studentForm.department_id
-                    );
+                  <div className="student-enrollment-summary">
+                    <strong>
+                      Selected ({studentForm.enrollments.length})
+                    </strong>
 
-                    return (
-                      <div
-                        className="student-enrollment-row"
-                        key={`${index}-${item.course_id}-${item.semester_id}`}
-                      >
-                        <div>
-                          <label htmlFor={`enrollment-course-${index}`}>
-                            Course {index + 1}
-                          </label>
-                          <select
-                            id={`enrollment-course-${index}`}
-                            value={item.course_id}
-                            onChange={event =>
-                              updateStudentEnrollment(
-                                index,
-                                'course_id',
-                                event.target.value
-                              )
-                            }
-                            required
-                          >
-                            <option value="">Select course</option>
-                            {availableCourses.map(course => (
-                              <option value={course.id} key={course.id}>
-                                {course.name}{course.code ? ` (${course.code})` : ''}
-                              </option>
-                            ))}
-                          </select>
-                          {studentFieldErrors[`enrollment_course_${index}`] && (
-                            <small className="field-error">
-                              {studentFieldErrors[`enrollment_course_${index}`]}
-                            </small>
-                          )}
-                        </div>
+                    {studentForm.enrollments.length === 0 ? (
+                      <p className="muted">No courses selected yet.</p>
+                    ) : (
+                      <div className="student-course-list">
+                        {studentForm.enrollments.map(item => {
+                          const course = studentOptions.courses.find(
+                            option => option.id === item.course_id
+                          );
+                          const semester = studentOptions.semesters.find(
+                            option => option.id === item.semester_id
+                          );
 
-                        <div>
-                          <label htmlFor={`enrollment-semester-${index}`}>
-                            Semester
-                          </label>
-                          <select
-                            id={`enrollment-semester-${index}`}
-                            value={item.semester_id}
-                            onChange={event =>
-                              updateStudentEnrollment(
-                                index,
-                                'semester_id',
-                                event.target.value
-                              )
-                            }
-                            required
-                          >
-                            <option value="">Select semester</option>
-                            {studentOptions.semesters
-                              .filter(semester => {
-                                const course = studentOptions.courses.find(
-                                  option => option.id === item.course_id
-                                );
-
-                                return !course?.semester_id ||
-                                  course.semester_id === semester.id;
-                              })
-                              .map(semester => {
-                              const year =
-                                semester.academic_year?.label ||
-                                semester.academic_year?.year_code;
-                              const label =
-                                semester.label ||
-                                `Semester ${semester.semester_number}`;
-
-                              return (
-                                <option value={semester.id} key={semester.id}>
-                                  {year ? `${year} - ` : ''}{label}
-                                </option>
-                              );
-                            })}
-                          </select>
-                          {studentFieldErrors[`enrollment_semester_${index}`] && (
-                            <small className="field-error">
-                              {studentFieldErrors[`enrollment_semester_${index}`]}
-                            </small>
-                          )}
-                        </div>
-
-                        <button
-                          type="button"
-                          className="reject-button"
-                          onClick={() => removeStudentEnrollment(index)}
-                          disabled={busy}
-                          aria-label={`Remove course enrollment ${index + 1}`}
-                        >
-                          <X size={15} /> Remove
-                        </button>
+                          return (
+                            <span
+                              className="student-course-chip"
+                              key={`${item.course_id}:${item.semester_id}`}
+                            >
+                              {course?.name || 'Course'}
+                              {semester
+                                ? ` - ${semester.label || `Semester ${semester.semester_number}`}`
+                                : ''}
+                              <button
+                                type="button"
+                                className="chip-remove"
+                                aria-label={`Remove ${course?.name || 'course'}`}
+                                onClick={() =>
+                                  removeStudentEnrollment(
+                                    item.course_id,
+                                    item.semester_id
+                                  )
+                                }
+                              >
+                                x
+                              </button>
+                            </span>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
+                    )}
+                  </div>
                 </div>
 
                 <label htmlFor="student-admission-year">Admission year</label>
