@@ -1,0 +1,3291 @@
+[
+ {
+  "id": "btech-ee",
+  "name": "Electrical Engineering",
+  "department": "Electrical Engineering",
+  "semesters": [
+   {
+    "number": 1,
+    "courses": [
+     {
+      "code": "R5MA1002T",
+      "title": "Mathematics I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1011T",
+      "title": "Physics",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1011L",
+      "title": "Physics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1001T",
+      "title": "Engineering Graphics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1001L",
+      "title": "Engineering Graphics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE1031T",
+      "title": "Basic Electrical Science",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE1031L",
+      "title": "Basic Electrical Science Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1021T",
+      "title": "Basics of Thermal Engineering",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE1024L",
+      "title": "Design Thinking and Idea Laboratory",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS1001L",
+      "title": "Business and Technical Communication",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "courses": [
+     {
+      "code": "R5MA1012T",
+      "title": "Mathematics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1012T",
+      "title": "Chemistry I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1012L",
+      "title": "Chemistry I Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1002T",
+      "title": "Engineering Mechanics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1002L",
+      "title": "Engineering Mechanics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1012T",
+      "title": "Programming for Problem Solving",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1012L",
+      "title": "Programming for Problem Solving Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE1026T",
+      "title": "Bioscience for Electrical Engineers",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE1027T",
+      "title": "Basic Electronics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE1028L",
+      "title": "Electrical Workshop",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE1029T",
+      "title": "Introduction to Ancient Indian Technology",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 3,
+    "courses": [
+     {
+      "code": "R5MA2003T",
+      "title": "Mathematics for Electrical Engineers",
+      "credits": 4,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2001T",
+      "title": "Electrical Networks",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2002T",
+      "title": "Electrical Machines I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2002L",
+      "title": "Electrical Machines I Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2003T",
+      "title": "Introduction to Power Systems",
+      "credits": 4,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2004L",
+      "title": "Electrical Measurements Laboratory",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH2401O",
+      "title": "Environmental Science",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2501O",
+      "title": "Marathi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2502O",
+      "title": "Hindi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2503O",
+      "title": "Sanskrit",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2504O",
+      "title": "Kannada",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2505O",
+      "title": "Gujarati",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2506O",
+      "title": "Punjabi",
+      "credits": 2,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 4,
+    "courses": [
+     {
+      "code": "R5EE2005T",
+      "title": "Electromagnetic Fields",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2005L",
+      "title": "Electromagnetic Fields Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2006T",
+      "title": "Electrical Machines II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2006L",
+      "title": "Electrical Machines II Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2007T",
+      "title": "Basic Electronics and Digital Circuits",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2007L",
+      "title": "Basic Electronics and Digital Circuits Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2008T",
+      "title": "Numerical Techniques",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2009T",
+      "title": "Signals and Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2402O",
+      "title": "Universal Human Values",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE2601P",
+      "title": "Community Engineering Project",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 5,
+    "courses": [
+     {
+      "code": "R5EE3010T",
+      "title": "Power Systems Analysis",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3010L",
+      "title": "Computer-Aided Power Systems Analysis Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3011T",
+      "title": "Power Electronics",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3011L",
+      "title": "Power Electronics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3012T",
+      "title": "Microprocessors and Microcontrollers",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3012L",
+      "title": "Microprocessors and Microcontrollers Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3013T",
+      "title": "Control Systems for Electrical Engineers",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS3403X",
+      "title": "Entrepreneurship / Economics / Management",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3101T",
+      "title": "Advanced Electronic Devices",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EE3102T",
+      "title": "Renewable Energy Resources",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EE3104T",
+      "title": "Applied Linear Algebra",
+      "credits": 4,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 6,
+    "courses": [
+     {
+      "code": "R5EE3015T",
+      "title": "Electrical Drives",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3015L",
+      "title": "Electrical Drives Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3016T",
+      "title": "Power Systems Protection",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS3404X",
+      "title": "Entrepreneurship / Economics / Management",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE3105T",
+      "title": "Digital Electronics",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EE3107T",
+      "title": "Sensors and Transducers",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EE3108T",
+      "title": "Internet of Things",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EE3105L",
+      "title": "Digital Electronics Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EE3107L",
+      "title": "Sensors and Transducers Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EE3108L",
+      "title": "Internet of Things Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MA3301T",
+      "title": "Combinatorics and Graph Theory",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CH3301T",
+      "title": "Practices to Performance: Pathways to Enterprise Sustainability",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5PH3301T",
+      "title": "Nanoscience and Nanotechnology for Engineers",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3301T",
+      "title": "Professional Communication Skills",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3302T",
+      "title": "Financial Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3303T",
+      "title": "Leadership and Team Effectiveness",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3304T",
+      "title": "Principles of Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3305T",
+      "title": "Business Development: From Start to Scale",
+      "credits": 4,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 7,
+    "courses": [
+     {
+      "code": "R5EE4017T",
+      "title": "AI/ML and Powergrids",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE4018T",
+      "title": "Digital Signal Processing",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE4019L",
+      "title": "Advanced Power Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE4020L",
+      "title": "Electrical Simulation Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE4801P",
+      "title": "B. Tech. Project",
+      "credits": 4,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 8,
+    "courses": [
+     {
+      "code": "R5EE4701I",
+      "title": "Internship",
+      "credits": 12,
+      "kind": "core"
+     },
+     {
+      "code": "R5EE4014T",
+      "title": "Research Methodology",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "btech-el",
+  "name": "Electronics Engineering",
+  "department": "Electrical Engineering",
+  "semesters": [
+   {
+    "number": 1,
+    "courses": [
+     {
+      "code": "R5MA1003T",
+      "title": "Mathematics I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1011T",
+      "title": "Chemistry I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1011L",
+      "title": "Chemistry I Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1001T",
+      "title": "Engineering Mechanics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1001L",
+      "title": "Engineering Mechanics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1001T",
+      "title": "Programming for Problem Solving",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1001L",
+      "title": "Programming for Problem Solving Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL1026T",
+      "title": "Bioscience for Electrical Engineers",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL1027T",
+      "title": "Basic Electrical Engineering",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL1028L",
+      "title": "Electrical Workshop",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL1029T",
+      "title": "Introduction to Ancient Indian Technology",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "courses": [
+     {
+      "code": "R5MA1013T",
+      "title": "Mathematics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1012T",
+      "title": "Physics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1012L",
+      "title": "Physics II Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1002T",
+      "title": "Engineering Graphics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1002L",
+      "title": "Engineering Graphics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL1021T",
+      "title": "Numerical Techniques",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL1022T",
+      "title": "Basic Electronics",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL1023L",
+      "title": "Basic Electronics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL1024L",
+      "title": "Design Thinking and Idea Laboratory",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS1002L",
+      "title": "Business and Technical Communication",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 3,
+    "courses": [
+     {
+      "code": "R5MA2006T",
+      "title": "Mathematics for Electronics Engineers",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2001T",
+      "title": "Electronic Circuit Analysis and Design",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2001L",
+      "title": "Electronic Circuit Analysis and Design Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2002T",
+      "title": "Electrical Networks Analysis",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2003T",
+      "title": "Principles of Communication Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2003L",
+      "title": "Principles of Communication Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2004T",
+      "title": "Digital System Design",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2004L",
+      "title": "Digital System Design Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2005L",
+      "title": "Python Programming Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2401O",
+      "title": "Universal Human Values",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 4,
+    "courses": [
+     {
+      "code": "R5EL2006T",
+      "title": "Signals and Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2007T",
+      "title": "Microprocessors and Microcontrollers",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2007L",
+      "title": "Microprocessors and Microcontrollers Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2008T",
+      "title": "Analog Integrated Circuits",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2008L",
+      "title": "Analog Integrated Circuits Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2009T",
+      "title": "Digital Communication",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL2009L",
+      "title": "Digital Communication Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH2402T",
+      "title": "Environmental Science",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2501O",
+      "title": "Marathi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2502O",
+      "title": "Hindi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2503O",
+      "title": "Sanskrit",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2504O",
+      "title": "Kannada",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2505O",
+      "title": "Gujarati",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2506O",
+      "title": "Punjabi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL2601P",
+      "title": "Community Engineering Project",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 5,
+    "courses": [
+     {
+      "code": "R5EL3001T",
+      "title": "Electromagnetic Fields",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3002T",
+      "title": "Principles of VLSI",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3002L",
+      "title": "Principles of VLSI Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3003T",
+      "title": "Digital Signal Processing",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3003L",
+      "title": "Digital Signal Processing Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3004T",
+      "title": "Control Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3005T",
+      "title": "Microprocessor Systems",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3005L",
+      "title": "Microprocessor Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3101T",
+      "title": "Digital VLSI Design",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3104T",
+      "title": "Introduction to Artificial Intelligence",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3105T",
+      "title": "Basics of IoT",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3101L",
+      "title": "Digital VLSI Design Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3104L",
+      "title": "Introduction to Artificial Intelligence Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3105L",
+      "title": "Basics of IoT Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 6,
+    "courses": [
+     {
+      "code": "R5EL3006T",
+      "title": "Power Electronics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3007T",
+      "title": "Embedded Systems",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3007L",
+      "title": "Embedded Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3008T",
+      "title": "Computer Communication Networks",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3008L",
+      "title": "Computer Communication Networks Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3401T",
+      "title": "Financial Planning",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3402T",
+      "title": "Electronics in Service to Society",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3106T",
+      "title": "Introduction to Microfabrication",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3109T",
+      "title": "Data Science",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3110T",
+      "title": "Wireless Sensor Networks",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3106L",
+      "title": "Introduction to Microfabrication Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3109L",
+      "title": "Data Science Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3110L",
+      "title": "Wireless Sensor Networks Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MA3301T",
+      "title": "Combinatorics and Graph Theory",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CH3301T",
+      "title": "Practices to Performance: Pathways to Enterprise Sustainability",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5PH3301T",
+      "title": "Nanoscience and Nanotechnology for Engineers",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3301T",
+      "title": "Professional Communication Skills",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3302T",
+      "title": "Financial Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3303T",
+      "title": "Leadership and Team Effectiveness",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3304T",
+      "title": "Principles of Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3305T",
+      "title": "Business Development: From Start to Scale",
+      "credits": 4,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 7,
+    "courses": [
+     {
+      "code": "R5EL4801P",
+      "title": "B. Tech. Project",
+      "credits": 4,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 8,
+    "courses": [
+     {
+      "code": "R5EL4701I",
+      "title": "Internship",
+      "credits": 12,
+      "kind": "core"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "btech-ce",
+  "name": "Computer Engineering",
+  "department": "Computer Engineering and Information Technology",
+  "semesters": [
+   {
+    "number": 1,
+    "courses": [
+     {
+      "code": "R5MA1003T",
+      "title": "Mathematics I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1011T",
+      "title": "Chemistry I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1011L",
+      "title": "Chemistry I Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1001T",
+      "title": "Engineering Mechanics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1001L",
+      "title": "Engineering Mechanics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1001T",
+      "title": "Programming for Problem Solving",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1001L",
+      "title": "Programming for Problem Solving Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1026T",
+      "title": "Probability and Statistics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1027T",
+      "title": "Digital Logic Design",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1028L",
+      "title": "Computer Engineering Workshop",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1029T",
+      "title": "Indian Knowledge Systems",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "courses": [
+     {
+      "code": "R5MA1014T",
+      "title": "Mathematics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1011T",
+      "title": "Physics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1011L",
+      "title": "Physics II Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1001T",
+      "title": "Engineering Graphics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1001L",
+      "title": "Engineering Graphics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1021T",
+      "title": "Computer Organization",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1022T",
+      "title": "Data Structures",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1023L",
+      "title": "Data Structures Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1024L",
+      "title": "Web Development Engineering Workshop",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS1001L",
+      "title": "Business and Technical Communication",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 3,
+    "courses": [
+     {
+      "code": "R5MA2007T",
+      "title": "Mathematics for Computer Engineers",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2001T",
+      "title": "Discrete Structures",
+      "credits": 4,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2002T",
+      "title": "Design and Analysis of Algorithms",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2002L",
+      "title": "Algorithms Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2003T",
+      "title": "Operating Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2003L",
+      "title": "Operating Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2004L",
+      "title": "Open Source Technology Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2005L",
+      "title": "Program Development Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2401O",
+      "title": "Universal Human Values",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2501O",
+      "title": "Marathi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2502O",
+      "title": "Hindi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2503O",
+      "title": "Sanskrit",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2504O",
+      "title": "Kannada",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2505O",
+      "title": "Gujarati",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2506O",
+      "title": "Punjabi",
+      "credits": 2,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 4,
+    "courses": [
+     {
+      "code": "R5CO2006T",
+      "title": "Theory of Computation",
+      "credits": 4,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2007T",
+      "title": "Artificial Intelligence",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2007L",
+      "title": "Artificial Intelligence Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2008T",
+      "title": "Database Management Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2008L",
+      "title": "Database Management Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2009T",
+      "title": "Software Engineering",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2009L",
+      "title": "Software Engineering Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2010L",
+      "title": "Linux Administration Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH2402O",
+      "title": "Environmental Science",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO2601P",
+      "title": "Community Engineering Project",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 5,
+    "courses": [
+     {
+      "code": "R5CO3001T",
+      "title": "Compiler Construction",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3002T",
+      "title": "Machine Learning",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3002L",
+      "title": "Machine Learning Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3003T",
+      "title": "Computer Networks",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3003L",
+      "title": "Computer Networks Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3004T",
+      "title": "Parallel Computing",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3001L",
+      "title": "Parallel Programming Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3005T",
+      "title": "Human Computer Interaction",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3101T",
+      "title": "Optimization Techniques",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3102T",
+      "title": "Image Processing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3103T",
+      "title": "NoSQL Databases",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3104T",
+      "title": "Advanced Databases",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3105T",
+      "title": "Geospatial Techniques",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3106T",
+      "title": "Computer Graphics",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3101L",
+      "title": "Optimization Techniques Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3102L",
+      "title": "Image Processing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3103L",
+      "title": "NoSQL Databases Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3104L",
+      "title": "Advanced Databases Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3105L",
+      "title": "Geospatial Techniques Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3106L",
+      "title": "Computer Graphics Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 6,
+    "courses": [
+     {
+      "code": "R5CO3004L",
+      "title": "DevOps",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3006T",
+      "title": "Cloud Computing",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3005L",
+      "title": "Cloud Computing Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3007T",
+      "title": "Cybersecurity",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3006L",
+      "title": "Cybersecurity Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3008T",
+      "title": "Research Methodology",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3011T",
+      "title": "Financial Management",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3107T",
+      "title": "Wireless Networks",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3108T",
+      "title": "Software Defined Networks",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3109T",
+      "title": "Management Information Systems",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3110T",
+      "title": "Object Oriented Analysis and Design",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3111T",
+      "title": "Blockchain Technology",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3112T",
+      "title": "Quantum Computing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3107L",
+      "title": "Wireless Networks Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3108L",
+      "title": "Software Defined Networks Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3109L",
+      "title": "Management Information Systems Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3110L",
+      "title": "Object Oriented Analysis and Design Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3111L",
+      "title": "Blockchain Technology Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO3112L",
+      "title": "Quantum Computing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MA3301T",
+      "title": "Combinatorics and Graph Theory",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CH3301T",
+      "title": "Practices to Performance: Pathways to Enterprise Sustainability",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5PH3301T",
+      "title": "Nanoscience and Nanotechnology for Engineers",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3301T",
+      "title": "Professional Communication Skills",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3302T",
+      "title": "Financial Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3303T",
+      "title": "Leadership and Team Effectiveness",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3304T",
+      "title": "Principles of Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3305T",
+      "title": "Business Development: From Start to Scale",
+      "credits": 4,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 7,
+    "courses": [
+     {
+      "code": "R5CO4001T",
+      "title": "Data Management",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO4004L",
+      "title": "Cross-Platform App Development Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO4101T",
+      "title": "Software Testing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4102T",
+      "title": "Performance Analysis of Network Systems",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4103T",
+      "title": "Distributed Algorithms",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4104T",
+      "title": "GenAI and LLMs",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4105T",
+      "title": "Edge Computing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4106T",
+      "title": "Approximation Algorithms",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4101L",
+      "title": "Software Testing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4102L",
+      "title": "Performance Analysis of Network Systems Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4103L",
+      "title": "Distributed Algorithms Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4104L",
+      "title": "GenAI and LLMs Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4105L",
+      "title": "Edge Computing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4106L",
+      "title": "Approximation Algorithms Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4107T",
+      "title": "Augmented Reality and Virtual Reality",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4108T",
+      "title": "Spatial and Graph Databases",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4109T",
+      "title": "Deep Learning",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4110T",
+      "title": "Modern Software Architecture",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4111T",
+      "title": "Quantum Computing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4112T",
+      "title": "Software Project Management",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4107L",
+      "title": "Augmented Reality and Virtual Reality Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4108L",
+      "title": "Spatial and Graph Databases  Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4109L",
+      "title": "Deep Learning Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4110L",
+      "title": "Modern Software Architecture Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4111L",
+      "title": "Quantum Computing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4112L",
+      "title": "Software Project Management Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MA4301T",
+      "title": "Numerical Optimization",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CH4301T",
+      "title": "Sustainability: Industry Perspectives for a Greener World",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MC4301T",
+      "title": "Deep Learning",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5PH4301T",
+      "title": "Quantum Computing",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4301T",
+      "title": "Corporate Leadership",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4302T",
+      "title": "Engineers and Society",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4303T",
+      "title": "Financial Literacy for Professionals",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4304T",
+      "title": "Entrepreneurship for Engineers",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4305T",
+      "title": "Economics of Banking and Finance Markets",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4306T",
+      "title": "Foundations of Accounting and Finance",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4307T",
+      "title": "Developing Soft Skills and Leadership through Indian Knowledge Systems",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CO4801P",
+      "title": "Project",
+      "credits": 4,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 8,
+    "courses": [
+     {
+      "code": "R5CO4701I",
+      "title": "Internship",
+      "credits": 12,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO4802P",
+      "title": "Research Publications and IPR",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "btech-it",
+  "name": "Information Technology",
+  "department": "Computer Engineering and Information Technology",
+  "semesters": [
+   {
+    "number": 1,
+    "courses": [
+     {
+      "code": "R5MA1003T",
+      "title": "Mathematics I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1011T",
+      "title": "Chemistry I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1011L",
+      "title": "Chemistry I Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1001T",
+      "title": "Engineering Mechanics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1001L",
+      "title": "Engineering Mechanics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1001T",
+      "title": "Programming for Problem Solving",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1001L",
+      "title": "Programming for Problem Solving Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1026T",
+      "title": "Probability and Statistics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1027T",
+      "title": "Digital Logic Design",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1028L",
+      "title": "Computer Engineering Workshop",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1029T",
+      "title": "Indian Knowledge Systems",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "courses": [
+     {
+      "code": "R5MA1014T",
+      "title": "Mathematics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1011T",
+      "title": "Physics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1011L",
+      "title": "Physics II Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1001T",
+      "title": "Engineering Graphics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1001L",
+      "title": "Engineering Graphics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1021T",
+      "title": "Computer Organization",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1022T",
+      "title": "Data Structures",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1023L",
+      "title": "Data Structures Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1024L",
+      "title": "Web Development Engineering Workshop",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS1001L",
+      "title": "Business and Technical Communication",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 3,
+    "courses": [
+     {
+      "code": "R5MA2007T",
+      "title": "Mathematics for Computer Engineers",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2001T",
+      "title": "Discrete Mathematics",
+      "credits": 4,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2002T",
+      "title": "Design and Analysis of Algorithms",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2002L",
+      "title": "Algorithms Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2003T",
+      "title": "Operating Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2003L",
+      "title": "Operating Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2004L",
+      "title": "Open Source Technology Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2005L",
+      "title": "Program Development Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2401O",
+      "title": "Universal Human Values",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2501O",
+      "title": "Marathi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2502O",
+      "title": "Hindi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2503O",
+      "title": "Sanskrit",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2504O",
+      "title": "Kannada",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2505O",
+      "title": "Gujarati",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2506O",
+      "title": "Punjabi",
+      "credits": 2,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 4,
+    "courses": [
+     {
+      "code": "R5IT2006T",
+      "title": "Automata Theory",
+      "credits": 4,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2007T",
+      "title": "Artificial Intelligence",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2007L",
+      "title": "Artificial Intelligence Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2008T",
+      "title": "Database Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2008L",
+      "title": "Database Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2009T",
+      "title": "Computer Networks",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2009L",
+      "title": "Computer Networks Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2010L",
+      "title": "Linux Administration Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH2402O",
+      "title": "Environmental Science",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT2601P",
+      "title": "Community Engineering Project",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 5,
+    "courses": [
+     {
+      "code": "R5IT3001T",
+      "title": "Machine Learning",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3003L",
+      "title": "Machine Learning Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3002T",
+      "title": "Software Engineering",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3002L",
+      "title": "Software Engineering Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3003T",
+      "title": "Parallel Computing",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3001L",
+      "title": "Parallel Programming Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3004T",
+      "title": "Cloud Computing",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3005T",
+      "title": "Cryptography",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3101T",
+      "title": "Optimization Techniques",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3102T",
+      "title": "Image Processing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3103T",
+      "title": "NoSQL Databases",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3104T",
+      "title": "Compiler Construction",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3105T",
+      "title": "Distributed Databases",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3106T",
+      "title": "Human Computer Interaction",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3101L",
+      "title": "Optimization Techniques Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3102L",
+      "title": "Image Processing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3103L",
+      "title": "NoSQL Databases Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3104L",
+      "title": "Compiler Construction Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3105L",
+      "title": "Distributed Databases Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3106L",
+      "title": "Human Computer Interaction Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 6,
+    "courses": [
+     {
+      "code": "R5IT3004L",
+      "title": "DevOps",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3006T",
+      "title": "System Security",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3005L",
+      "title": "System Security Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3007T",
+      "title": "Wireless Networks",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3006L",
+      "title": "Wireless Networks Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3008T",
+      "title": "Research Methodology",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO3011T",
+      "title": "Financial Management",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT3107T",
+      "title": "Blockchain Technology",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3108T",
+      "title": "Object Oriented Analysis and Design",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3109T",
+      "title": "Geospatial Techniques",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3110T",
+      "title": "Computer Vision",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3111T",
+      "title": "Information Storage Management Systems",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3112T",
+      "title": "Quantum Computing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3107L",
+      "title": "Blockchain Technology Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3108L",
+      "title": "Object Oriented Analysis and Design Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3109L",
+      "title": "Geospatial Techniques Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3110L",
+      "title": "Computer Vision Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3111L",
+      "title": "Information Storage Management Systems Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT3112L",
+      "title": "Quantum Computing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MA3301T",
+      "title": "Combinatorics and Graph Theory",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CH3301T",
+      "title": "Practices to Performance: Pathways to Enterprise Sustainability",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5PH3301T",
+      "title": "Nanoscience and Nanotechnology for Engineers",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3301T",
+      "title": "Professional Communication Skills",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3302T",
+      "title": "Financial Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3303T",
+      "title": "Leadership and Team Effectiveness",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3304T",
+      "title": "Principles of Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3305T",
+      "title": "Business Development: From Start to Scale",
+      "credits": 4,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 7,
+    "courses": [
+     {
+      "code": "R5IT4001T",
+      "title": "Data Management",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT4004L",
+      "title": "Cross-Platform App Development Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5IT4101T",
+      "title": "Software Testing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4102T",
+      "title": "Performance Analysis of Network Systems",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4103T",
+      "title": "Distributed Algorithms",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4104T",
+      "title": "GenAI and LLMs",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4105T",
+      "title": "Edge Computing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4106T",
+      "title": "Approximation Algorithms",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4101L",
+      "title": "Software Testing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4102L",
+      "title": "Performance Analysis of Network Systems Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4103L",
+      "title": "Distributed Algorithms Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4104L",
+      "title": "GenAI and LLMs Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4105L",
+      "title": "Edge Computing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4106L",
+      "title": "Approximation Algorithms Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4107T",
+      "title": "Augmented Reality and Virtual Reality",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4108T",
+      "title": "Spatial and Graph Databases",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4109T",
+      "title": "Deep Learning",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4110T",
+      "title": "Modern Software Architecture",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4111T",
+      "title": "Quantum Computing",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4112T",
+      "title": "Software Project Management",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4107L",
+      "title": "Augmented Reality and Virtual Reality Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4108L",
+      "title": "Spatial and Graph Databases  Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4109L",
+      "title": "Deep Learning Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4110L",
+      "title": "Modern Software Architecture Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4111L",
+      "title": "Quantum Computing Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4112L",
+      "title": "Software Project Management Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MA4301T",
+      "title": "Numerical Optimization",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CH4301T",
+      "title": "Sustainability: Industry Perspectives for a Greener World",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MC4301T",
+      "title": "Deep Learning",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5PH4301T",
+      "title": "Quantum Computing",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4301T",
+      "title": "Corporate Leadership",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4302T",
+      "title": "Engineers and Society",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4303T",
+      "title": "Financial Literacy for Professionals",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4304T",
+      "title": "Entrepreneurship for Engineers",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4305T",
+      "title": "Economics of Banking and Finance Markets",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4306T",
+      "title": "Foundations of Accounting and Finance",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS4307T",
+      "title": "Developing Soft Skills and Leadership through Indian Knowledge Systems",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5IT4801P",
+      "title": "Project",
+      "credits": 4,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 8,
+    "courses": [
+     {
+      "code": "R5CO4701I",
+      "title": "Internship",
+      "credits": 12,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO4802P",
+      "title": "Research Publications and IPR",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "btech-et",
+  "name": "Electronics and Telecommunication",
+  "department": "Electrical Engineering",
+  "semesters": [
+   {
+    "number": 1,
+    "courses": [
+     {
+      "code": "R5MA1003T",
+      "title": "Mathematics I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1011T",
+      "title": "Chemistry I",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH1011L",
+      "title": "Chemistry I Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1001T",
+      "title": "Engineering Mechanics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5SE1001L",
+      "title": "Engineering Mechanics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1001T",
+      "title": "Programming for Problem Solving",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5CO1001L",
+      "title": "Programming for Problem Solving Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET1026T",
+      "title": "Bioscience for Electrical Engineers",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET1027T",
+      "title": "Basic Electrical Engineering",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET1028L",
+      "title": "Electrical Workshop",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET1029T",
+      "title": "Introduction to Ancient Indian Technology",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 2,
+    "courses": [
+     {
+      "code": "R5MA1013T",
+      "title": "Mathematics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1012T",
+      "title": "Physics II",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5PH1012L",
+      "title": "Physics II Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1002T",
+      "title": "Engineering Graphics",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ME1002L",
+      "title": "Engineering Graphics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET1021T",
+      "title": "Numerical Techniques",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET1022T",
+      "title": "Basic Electronics",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET1023L",
+      "title": "Basic Electronics Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET1024L",
+      "title": "Design Thinking and Idea Laboratory",
+      "credits": 1.5,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS1002L",
+      "title": "Business and Technical Communication",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 3,
+    "courses": [
+     {
+      "code": "R5MA2009T",
+      "title": "Mathematics for Electronics Engineers",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2001T",
+      "title": "Electronic Devices and Circuits",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2001L",
+      "title": "Electronic Devices and Circuits Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2002T",
+      "title": "Electrical Network Theory",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2003T",
+      "title": "Digital Logic Design",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2003L",
+      "title": "Digital Logic Design Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2004T",
+      "title": "Analog Communication Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2004L",
+      "title": "Analog Communication Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2005L",
+      "title": "Python Programming Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2401O",
+      "title": "Universal Human Values",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 4,
+    "courses": [
+     {
+      "code": "R5ET2006T",
+      "title": "Signals and Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2007T",
+      "title": "Microprocessors and Microcontrollers",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2007L",
+      "title": "Microprocessors and Microcontrollers Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2008T",
+      "title": "Digital Communication Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2008L",
+      "title": "Digital Communication Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2009T",
+      "title": "Linear Integrated Circuits",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET2009L",
+      "title": "Linear Integrated Circuits Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5CH2402T",
+      "title": "Environmental Science",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5HS2501O",
+      "title": "Marathi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2502O",
+      "title": "Hindi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2503O",
+      "title": "Sanskrit",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2504O",
+      "title": "Kannada",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2505O",
+      "title": "Gujarati",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS2506O",
+      "title": "Punjabi",
+      "credits": 2,
+      "kind": "elective"
+     },
+     {
+      "code": "R5ET2601P",
+      "title": "Community Engineering Project",
+      "credits": 2,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 5,
+    "courses": [
+     {
+      "code": "R5ET3001T",
+      "title": "Electromagnetic Fields and Waves",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3002T",
+      "title": "Control Systems",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3003T",
+      "title": "Digital Signal Processing",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3003L",
+      "title": "Digital Signal Processing Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3004T",
+      "title": "Computer Communication Networks",
+      "credits": 3,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3004L",
+      "title": "Computer Communication Networks Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3005T",
+      "title": "Telecom Network Management",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3005L",
+      "title": "Telecom Network Management Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3101T",
+      "title": "Microprocessor Systems",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5ET3102T",
+      "title": "Wireless Sensor Networks",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5ET3101L",
+      "title": "Microprocessor Systems Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5ET3102L",
+      "title": "Wireless Sensor Networks Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 6,
+    "courses": [
+     {
+      "code": "R5ET3006T",
+      "title": "Microwave Communication",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3006L",
+      "title": "Microwave Communication Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3007T",
+      "title": "Embedded Systems",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3007L",
+      "title": "Embedded Systems Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3008T",
+      "title": "Wireless Communication",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3008L",
+      "title": "Wireless Communication Laboratory",
+      "credits": 1,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3401T",
+      "title": "Financial Planning",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5ET3401T",
+      "title": "Commmunication in Service to Society",
+      "credits": 2,
+      "kind": "core"
+     },
+     {
+      "code": "R5EL3106T",
+      "title": "Introduction to Microfabrication",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3107T",
+      "title": "Error-Correcting Codes",
+      "credits": 3,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3106L",
+      "title": "Introduction to Microfabrication Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5EL3107L",
+      "title": "Error-Correcting Codes Laboratory",
+      "credits": 1,
+      "kind": "elective"
+     },
+     {
+      "code": "R5MA3301T",
+      "title": "Combinatorics and Graph Theory",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5CH3301T",
+      "title": "Practices to Performance: Pathways to Enterprise Sustainability",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5PH3301T",
+      "title": "Nanoscience and Nanotechnology for Engineers",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3301T",
+      "title": "Professional Communication Skills",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3302T",
+      "title": "Financial Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3303T",
+      "title": "Leadership and Team Effectiveness",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3304T",
+      "title": "Principles of Management",
+      "credits": 4,
+      "kind": "elective"
+     },
+     {
+      "code": "R5HS3305T",
+      "title": "Business Development: From Start to Scale",
+      "credits": 4,
+      "kind": "elective"
+     }
+    ]
+   },
+   {
+    "number": 7,
+    "courses": [
+     {
+      "code": "R5ET4801P",
+      "title": "B. Tech. Project",
+      "credits": 4,
+      "kind": "core"
+     }
+    ]
+   },
+   {
+    "number": 8,
+    "courses": [
+     {
+      "code": "R5ET4701I",
+      "title": "Internship",
+      "credits": 12,
+      "kind": "core"
+     }
+    ]
+   }
+  ]
+ }
+]
