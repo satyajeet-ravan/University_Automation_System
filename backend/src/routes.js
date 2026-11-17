@@ -15,11 +15,13 @@ import { createFacultyAttendanceRouter } from './faculty-attendance.js';
 import { createStudentEnrollmentsRouter } from './student-enrollments.js';
 import { attachEnrollments } from './student-enrollment-loader.js';
 import { resolveCurriculum } from './curriculum.js';
+import { createStudentPhotoHandlers } from './student-photo.js';
 
 const router = Router();
 
 const studentVerification = createStudentVerificationHandlers(supabaseAdmin);
-const studentProfile = createStudentProfileHandlers(supabaseAdmin);
+const studentPhoto = createStudentPhotoHandlers(supabaseAdmin);
+const studentProfile = createStudentProfileHandlers(supabaseAdmin, studentPhoto);
 const faculty = createFacultyHandlers(supabaseAdmin);
 
 const STUDENT_SELECT =
@@ -1778,6 +1780,30 @@ router.get(
 
     return res.status(result.status).json(result.body);
   }
+);
+
+// Only the student themselves can change their profile photo; the Admin and
+// Faculty roles are rejected by requireVerifiedStudent.
+router.put(
+  '/profile/me/photo',
+  requireAuth,
+  requireVerifiedStudent,
+  safe(async (req, res) => {
+    const result = await studentPhoto.upload(req.user.id, req.body);
+
+    return res.status(result.status).json(result.body);
+  })
+);
+
+router.delete(
+  '/profile/me/photo',
+  requireAuth,
+  requireVerifiedStudent,
+  safe(async (req, res) => {
+    const result = await studentPhoto.remove(req.user.id);
+
+    return res.status(result.status).json(result.body);
+  })
 );
 
 router.get(

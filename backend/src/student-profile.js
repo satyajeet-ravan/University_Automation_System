@@ -36,7 +36,7 @@ function validatePhoneUpdate(body) {
   return { phone: phone || null };
 }
 
-export function createStudentProfileHandlers(supabaseAdmin) {
+export function createStudentProfileHandlers(supabaseAdmin, photoHandlers = null) {
   return {
     async get(profileId) {
       try {
@@ -104,6 +104,9 @@ export function createStudentProfileHandlers(supabaseAdmin) {
         }
 
         student.enrollments = enrollments || [];
+        student.photo_url = photoHandlers
+          ? await photoHandlers.signedUrl(student.id)
+          : null;
 
         return {
           status: 200,
