@@ -49,7 +49,7 @@ function semesterName(semester) {
   const label =
     semester.label || `Semester ${semester.semester_number || ''}`.trim();
 
-  return year ? `${year} — ${label}` : label;
+  return year ? `${year} - ${label}` : label;
 }
 
 function StudentCoursesPanel({ record, loading, error }) {
@@ -71,7 +71,7 @@ function StudentCoursesPanel({ record, loading, error }) {
       {loading ? (
         <div className="empty-state">
           <RefreshCw size={24} />
-          <span>Loading your courses…</span>
+          <span>Loading your courses...</span>
         </div>
       ) : error ? (
         <div className="alert error">{error}</div>
@@ -97,7 +97,7 @@ function StudentCoursesPanel({ record, loading, error }) {
                   <ul>
                     {subjects.map(subject => (
                       <li key={subject.id}>
-                        <strong>{subject.code}</strong> — {subject.name}
+                        <strong>{subject.code}</strong> - {subject.name}
                         {subject.credits != null
                           ? ` (${subject.credits} credits)`
                           : ''}
@@ -141,7 +141,7 @@ function StudentAttendancePanel({ state }) {
       {loading ? (
         <div className="empty-state">
           <RefreshCw size={24} />
-          <span>Loading attendance…</span>
+          <span>Loading attendance...</span>
         </div>
       ) : error ? (
         <div className="alert error">{error}</div>
@@ -176,7 +176,7 @@ function StudentAttendancePanel({ state }) {
                     <td>{item.absent}</td>
                     <td>
                       <strong>
-                        {item.percentage == null ? '—' : `${item.percentage}%`}
+                        {item.percentage == null ? '-' : `${item.percentage}%`}
                       </strong>
                     </td>
                   </tr>
@@ -201,8 +201,8 @@ function StudentAttendancePanel({ state }) {
                 {records.map(item => (
                   <tr key={item.session_id}>
                     <td>{item.session_date}</td>
-                    <td>{item.course?.code || item.course?.name || '—'}</td>
-                    <td>{item.topic || '—'}</td>
+                    <td>{item.course?.code || item.course?.name || '-'}</td>
+                    <td>{item.topic || '-'}</td>
                     <td>
                       <span
                         className={`status-pill ${item.attendance_status === 'absent' ? 'pending' : 'active-status'}`}
@@ -210,7 +210,7 @@ function StudentAttendancePanel({ state }) {
                         {item.attendance_status}
                       </span>
                     </td>
-                    <td>{item.remarks || '—'}</td>
+                    <td>{item.remarks || '-'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1071,7 +1071,7 @@ export default function App() {
     const cleanEmail = adminForm.email.trim();
 
     if (!cleanName) {
-      errors.fullName = 'Enter the admin’s full name.';
+      errors.fullName = 'Enter the admin\'s full name.';
     } else if (cleanName.length > 120) {
       errors.fullName = 'Name must be 120 characters or fewer.';
     }
@@ -1228,7 +1228,7 @@ export default function App() {
           </div>
 
           <small className="copyright">
-            University Automation System · Starter build
+            University Automation System
           </small>
         </section>
 
@@ -1357,7 +1357,7 @@ export default function App() {
             ) : (
               <button className="primary-button" disabled={busy}>
                 {busy
-  ? 'Please wait…'
+  ? 'Please wait...'
   : mode === 'login'
     ? 'Sign in'
     : 'Create student account'}
@@ -1680,7 +1680,7 @@ export default function App() {
           <section className="panel">
             <p>
               {profileLoading
-                ? 'Loading account details…'
+                ? 'Loading account details...'
                 : 'Account details could not be loaded. Check the error above, then retry.'}
             </p>
 
@@ -1689,7 +1689,7 @@ export default function App() {
               disabled={profileLoading}
               onClick={() => loadProfile(session.access_token)}
             >
-              {profileLoading ? 'Loading…' : 'Retry'}
+              {profileLoading ? 'Loading...' : 'Retry'}
             </button>
           </section>
         ) : view === 'registrations' && isAdmin ? (
@@ -1726,13 +1726,13 @@ export default function App() {
                   <tbody>
                     {data.map(r => (
                       <tr key={r.profile_id}>
-                        <td>{r.full_name || '—'}</td>
-                        <td>{r.email || '—'}</td>
+                        <td>{r.full_name || '-'}</td>
+                        <td>{r.email || '-'}</td>
                         <td>{r.student_code || 'Generated on approval'}</td>
                         <td>
                           {r.created_at
                             ? new Date(r.created_at).toLocaleDateString()
-                            : '—'}
+                            : '-'}
                         </td>
                         <td>
                           <div className="row-actions">
@@ -1812,7 +1812,7 @@ export default function App() {
                 <span>Total student records</span>
                 <strong>
                   {studentsLoading && studentTotal === 0
-                    ? '…'
+                    ? '...'
                     : studentTotal}
                 </strong>
               </div>
@@ -1915,7 +1915,7 @@ export default function App() {
               {studentOptionsLoading &&
                 !studentOptions.departments.length && (
                   <p className="muted student-option-note">
-                    Loading department and course options…
+                    Loading department and course options...
                   </p>
                 )}
 
@@ -1931,7 +1931,7 @@ export default function App() {
               <div className="student-table-heading">
                 <strong>
                   {studentsLoading
-                    ? 'Loading student records…'
+                    ? 'Loading student records...'
                     : `Showing ${studentFilteredTotal} matching record${studentFilteredTotal === 1 ? '' : 's'}`}
                 </strong>
                 <span>{studentTotal} total</span>
@@ -1940,7 +1940,7 @@ export default function App() {
               {studentsLoading ? (
                 <div className="empty-state">
                   <RefreshCw size={24} />
-                  <span>Loading students…</span>
+                  <span>Loading students...</span>
                 </div>
               ) : studentsError ? (
                 <div className="empty-state">
@@ -1974,8 +1974,8 @@ export default function App() {
                         <tr key={student.id}>
                           <td><strong>{student.student_code}</strong></td>
                           <td>{student.full_name}</td>
-                          <td>{student.email || '—'}</td>
-                          <td>{student.department?.name || '—'}</td>
+                          <td>{student.email || '-'}</td>
+                          <td>{student.department?.name || '-'}</td>
                           <td>
                             {student.enrollments?.filter(item => item.status === 'enrolled').length ? (
                               <div className="student-course-list">
@@ -1983,11 +1983,11 @@ export default function App() {
                                   .filter(item => item.status === 'enrolled')
                                   .map(item => (
                                     <span className="student-course-chip" key={item.id}>
-                                      {item.course?.name || 'Course'} — {item.semester?.label || `Semester ${item.semester?.semester_number || ''}`}
+                                      {item.course?.name || 'Course'} - {item.semester?.label || `Semester ${item.semester?.semester_number || ''}`}
                                     </span>
                                   ))}
                               </div>
-                            ) : student.course?.name || '—'}
+                            ) : student.course?.name || '-'}
                           </td>
                           <td>
                             <span
@@ -2069,7 +2069,7 @@ export default function App() {
 
                 <span>
                   {studentFilteredTotal
-                    ? `${studentOffset + 1}–${Math.min(studentOffset + students.length, studentFilteredTotal)} of ${studentFilteredTotal}`
+                    ? `${studentOffset + 1}-${Math.min(studentOffset + students.length, studentFilteredTotal)} of ${studentFilteredTotal}`
                     : '0 results'}
                 </span>
 
@@ -2124,7 +2124,7 @@ export default function App() {
             {adminsLoading ? (
               <div className="empty-state">
                 <RefreshCw size={24} />
-                <span>Loading admin accounts…</span>
+                <span>Loading admin accounts...</span>
               </div>
             ) : admins?.length ? (
               <div className="table-wrap">
@@ -2141,8 +2141,8 @@ export default function App() {
                   <tbody>
                     {admins.map(admin => (
                       <tr key={admin.id}>
-                        <td>{admin.full_name || '—'}</td>
-                        <td>{admin.email || '—'}</td>
+                        <td>{admin.full_name || '-'}</td>
+                        <td>{admin.email || '-'}</td>
                         <td>
                           <span
                             className={`status-pill ${admin.account_status === 'active' ? 'active-status' : 'pending'}`}
@@ -2154,7 +2154,7 @@ export default function App() {
                         <td>
                           {admin.created_at
                             ? new Date(admin.created_at).toLocaleDateString()
-                            : '—'}
+                            : '-'}
                         </td>
                       </tr>
                     ))}
@@ -2189,7 +2189,7 @@ export default function App() {
             {studentRecordLoading ? (
               <div className="empty-state">
                 <RefreshCw size={24} />
-                <span>Loading student profile…</span>
+                <span>Loading student profile...</span>
               </div>
             ) : studentRecordError ? (
               <div className="alert error">{studentRecordError}</div>
@@ -2198,38 +2198,38 @@ export default function App() {
                 <div className="profile-grid">
                   <div className="profile-field">
                     <span>Student ID</span>
-                    <strong>{studentRecord.student_code || '—'}</strong>
+                    <strong>{studentRecord.student_code || '-'}</strong>
                   </div>
                   <div className="profile-field">
                     <span>Full name</span>
-                    <strong>{studentRecord.full_name || '—'}</strong>
+                    <strong>{studentRecord.full_name || '-'}</strong>
                   </div>
                   <div className="profile-field">
                     <span>Email address</span>
-                    <strong>{studentRecord.email || session.user.email || '—'}</strong>
+                    <strong>{studentRecord.email || session.user.email || '-'}</strong>
                   </div>
                   <div className="profile-field">
                     <span>Department</span>
-                    <strong>{studentRecord.department?.name || '—'}</strong>
+                    <strong>{studentRecord.department?.name || '-'}</strong>
                   </div>
                   <div className="profile-field">
                     <span>Course enrollments</span>
                     <strong>
                       {(studentRecord.enrollments || [])
                         .filter(item => item.status === 'enrolled' && item.course)
-                        .map(item => `${item.course.name} — ${semesterName(item.semester)}`)
+                        .map(item => `${item.course.name} - ${semesterName(item.semester)}`)
                         .join(', ') ||
                         studentRecord.course?.name ||
-                        '—'}
+                        '-'}
                     </strong>
                   </div>
                   <div className="profile-field">
                     <span>Admission year</span>
-                    <strong>{studentRecord.admission_year || '—'}</strong>
+                    <strong>{studentRecord.admission_year || '-'}</strong>
                   </div>
                   <div className="profile-field">
                     <span>Account status</span>
-                    <strong>{studentRecord.status || '—'}</strong>
+                    <strong>{studentRecord.status || '-'}</strong>
                   </div>
                 </div>
 
@@ -2254,7 +2254,7 @@ export default function App() {
                     className="primary-button"
                     disabled={phoneSaving}
                   >
-                    {phoneSaving ? 'Saving…' : 'Save phone number'}
+                    {phoneSaving ? 'Saving...' : 'Save phone number'}
                   </button>
                 </form>
               </>
@@ -2505,39 +2505,39 @@ export default function App() {
                   <div className="profile-grid">
                     <div className="profile-field">
                       <span>Student ID</span>
-                      <strong>{selectedStudent.student_code || '—'}</strong>
+                      <strong>{selectedStudent.student_code || '-'}</strong>
                     </div>
                     <div className="profile-field">
                       <span>Full name</span>
-                      <strong>{selectedStudent.full_name || '—'}</strong>
+                      <strong>{selectedStudent.full_name || '-'}</strong>
                     </div>
                     <div className="profile-field">
                       <span>Email address / Login username</span>
-                      <strong>{selectedStudent.email || '—'}</strong>
+                      <strong>{selectedStudent.email || '-'}</strong>
                     </div>
                     <div className="profile-field">
                       <span>Phone number</span>
-                      <strong>{selectedStudent.phone || '—'}</strong>
+                      <strong>{selectedStudent.phone || '-'}</strong>
                     </div>
                     <div className="profile-field">
                       <span>Department</span>
-                      <strong>{selectedStudent.department?.name || '—'}</strong>
+                      <strong>{selectedStudent.department?.name || '-'}</strong>
                     </div>
                     <div className="profile-field">
                       <span>Course enrollments</span>
                       <strong>
                         {selectedStudent.enrollments?.filter(item => item.status === 'enrolled').length
-                          ? selectedStudent.enrollments.filter(item => item.status === 'enrolled').map(item => `${item.course?.name || 'Course'} — ${item.semester?.label || `Semester ${item.semester?.semester_number || ''}`}`).join(', ')
+                          ? selectedStudent.enrollments.filter(item => item.status === 'enrolled').map(item => `${item.course?.name || 'Course'} - ${item.semester?.label || `Semester ${item.semester?.semester_number || ''}`}`).join(', ')
                           : 'No course-semester enrollments loaded'}
                       </strong>
                     </div>
                     <div className="profile-field">
                       <span>Admission year</span>
-                      <strong>{selectedStudent.admission_year || '—'}</strong>
+                      <strong>{selectedStudent.admission_year || '-'}</strong>
                     </div>
                     <div className="profile-field">
                       <span>Status</span>
-                      <strong>{selectedStudent.status || '—'}</strong>
+                      <strong>{selectedStudent.status || '-'}</strong>
                     </div>
                   </div>
 
@@ -2559,7 +2559,7 @@ export default function App() {
               ) : (
                 <div className="empty-state">
                   <RefreshCw size={24} />
-                  <span>Loading student details…</span>
+                  <span>Loading student details...</span>
                 </div>
               )
             ) : (
@@ -2817,7 +2817,7 @@ export default function App() {
 
                               return (
                                 <option value={semester.id} key={semester.id}>
-                                  {year ? `${year} — ` : ''}{label}
+                                  {year ? `${year} - ` : ''}{label}
                                 </option>
                               );
                             })}
@@ -2878,7 +2878,7 @@ export default function App() {
                     disabled={busy}
                   >
                     {busy
-                      ? 'Saving…'
+                      ? 'Saving...'
                       : studentModal === 'edit'
                         ? 'Save Changes'
                         : 'Create Student'}
@@ -3043,7 +3043,7 @@ export default function App() {
                   className="primary-button admin-submit-button"
                   disabled={adminBusy}
                 >
-                  {adminBusy ? 'Creating…' : 'Create Admin'}
+                  {adminBusy ? 'Creating...' : 'Create Admin'}
                 </button>
               </div>
             </form>
