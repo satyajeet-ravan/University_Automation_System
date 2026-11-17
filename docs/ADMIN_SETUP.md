@@ -18,4 +18,4 @@ set role = 'admin', account_status = 'active';
 
 This is a manual, controlled setup step for the first Admin; it is not part of public signup.
 
-After the first Admin is active, they can create additional Admin accounts from **Admin Management → Add Admin** in CampusFlow. The backend verifies the caller's active Admin profile, creates the Auth user with the private service-role client, and assigns the active Admin profile. Deliver temporary passwords through a secure channel. No schema migration is required.
+After the first Admin is active, they can create additional Admin accounts from **Admin Management > Add Admin** in CampusFlow. The backend verifies the caller's active Admin profile, creates the Auth user with the private service-role client, and assigns the active Admin profile. Deliver temporary passwords through a secure channel. No schema migration is required.
