@@ -2043,15 +2043,24 @@ export default function App() {
                           <td>{student.department?.name || '-'}</td>
                           <td>
                             {student.enrollments?.filter(item => item.status === 'enrolled').length ? (
-                              <div className="student-course-list">
-                                {student.enrollments
-                                  .filter(item => item.status === 'enrolled')
-                                  .map(item => (
-                                    <span className="student-course-chip" key={item.id}>
-                                      {item.course?.name || 'Course'} - {item.semester?.label || `Semester ${item.semester?.semester_number || ''}`}
-                                    </span>
-                                  ))}
-                              </div>
+                              <details className="student-course-details">
+                                <summary>
+                                  {student.enrollments.filter(item => item.status === 'enrolled').length} course
+                                  {student.enrollments.filter(item => item.status === 'enrolled').length === 1 ? '' : 's'}
+                                </summary>
+                                <ul>
+                                  {student.enrollments
+                                    .filter(item => item.status === 'enrolled')
+                                    .map(item => (
+                                      <li key={item.id}>
+                                        {item.course?.name || 'Course'}
+                                        {item.course?.code ? ` (${item.course.code})` : ''}
+                                        {' - '}
+                                        {item.semester?.label || `Semester ${item.semester?.semester_number || ''}`}
+                                      </li>
+                                    ))}
+                                </ul>
+                              </details>
                             ) : student.course?.name || '-'}
                           </td>
                           <td>
