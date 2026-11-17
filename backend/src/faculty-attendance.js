@@ -169,14 +169,40 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
     async function hasCourseAssignment(facultyId, courseId) {
         const { data, error } = await supabaseAdmin
             .from('course_faculty_assignments')
-            .select('id')
+            .select('id, course:courses!inner(status)')
             .eq('faculty_id', facultyId)
             .eq('course_id', courseId)
             .eq('status', 'active')
+            .eq('course.status', 'active')
             .maybeSingle();
 
         if (error) throw error;
         return Boolean(data);
+    }
+
+    // Enrolled students who are still active; deactivated students are not
+    // shown on the roster, so they must not block submitting a session.
+    async function activeEnrolledIds(courseId, semesterId) {
+        const { data: rows, error } = await supabaseAdmin
+            .from('student_semester_enrollments')
+            .select('student_id')
+            .eq('course_id', courseId)
+            .eq('semester_id', semesterId)
+            .eq('status', 'enrolled');
+
+        if (error) throw error;
+
+        const ids = [...new Set((rows || []).map(row => row.student_id))];
+        if (!ids.length) return new Set();
+
+        const { data: students, error: studentError } = await supabaseAdmin
+            .from('students')
+            .select('id')
+            .in('id', ids)
+            .eq('status', 'active');
+
+        if (studentError) throw studentError;
+        return new Set((students || []).map(student => student.id));
     }
 
     // The semester must be the one the course is currently assigned to.
@@ -508,18 +534,7 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                 return res.status(400).json({ error: 'This course is not assigned to the selected semester.' });
             }
 
-            const { data: enrollmentRows, error: enrollmentError } = await supabaseAdmin
-                .from('student_semester_enrollments')
-                .select('student_id')
-                .eq('course_id', courseId)
-                .eq('semester_id', semesterId)
-                .eq('status', 'enrolled');
-
-            if (enrollmentError) {
-                return sendDbError(res, 'validate student enrollment', enrollmentError);
-            }
-
-            const enrolledIds = new Set((enrollmentRows || []).map(row => row.student_id));
+            const enrolledIds = await activeEnrolledIds(courseId, semesterId);
             if (attendance.some(row => !enrolledIds.has(row.student_id))) {
                 return res.status(400).json({
                     error: 'Attendance contains a student who is not actively enrolled in this course and semester.'
@@ -617,17 +632,7 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                 return res.json({ message: 'Attendance was already submitted.', session, emailSent: false });
             }
 
-            const { data: enrollments, error: enrollmentError } = await supabaseAdmin
-                .from('student_semester_enrollments')
-                .select('student_id')
-                .eq('course_id', session.course_id)
-                .eq('semester_id', session.semester_id)
-                .eq('status', 'enrolled');
-            if (enrollmentError) {
-                return sendDbError(res, 'validate enrolled students', enrollmentError);
-            }
-
-            const enrolledIds = new Set((enrollments || []).map(row => row.student_id));
+            const enrolledIds = await activeEnrolledIds(session.course_id, session.semester_id);
             const { data: records, error: recordsError } = await supabaseAdmin
                 .from('attendance_records')
                 .select('student_id, attendance_status, remarks')
