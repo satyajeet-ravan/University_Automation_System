@@ -23,7 +23,13 @@ function Brand() {
   );
 }
 
-function EmptyPortalPanel({ icon: Icon, title, description, requirement }) {
+function EmptyPortalPanel({
+  icon: Icon,
+  title,
+  description,
+  requirement,
+  heading = 'No data available'
+}) {
   return (
     <section className="panel student-module-panel">
       <div className="panel-heading">
@@ -34,7 +40,7 @@ function EmptyPortalPanel({ icon: Icon, title, description, requirement }) {
       </div>
       <div className="empty-state">
         <Icon size={26} />
-        <strong>No data available</strong>
+        <strong>{heading}</strong>
         <span>{requirement}</span>
       </div>
     </section>
@@ -2381,7 +2387,8 @@ export default function App() {
             icon={Clock3}
             title="Timetable"
             description="View your class schedule."
-            requirement="Your timetable will appear here when timetable data is configured."
+            heading="To be implemented soon"
+            requirement="The timetable module is not built yet. It will appear here once it is released."
           />
         ) : view === 'attendance' && isActiveStudent ? (
           <StudentAttendancePanel state={studentAttendance} />
