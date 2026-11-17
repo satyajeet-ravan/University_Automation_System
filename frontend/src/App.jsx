@@ -52,6 +52,45 @@ function semesterName(semester) {
   return year ? `${year} - ${label}` : label;
 }
 
+function EnrollmentTable({ enrollments, fallback }) {
+  const rows = (enrollments || []).filter(
+    item => item.status === 'enrolled' && item.course
+  );
+
+  return (
+    <div className="enrollment-table-block">
+      <h3>Course Enrollments</h3>
+
+      {rows.length ? (
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Course</th>
+                <th>Code</th>
+                <th>Semester</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((item, index) => (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
+                  <td>{item.course.name}</td>
+                  <td>{item.course.code || '-'}</td>
+                  <td>{semesterName(item.semester)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="muted">{fallback || 'No course enrollments.'}</p>
+      )}
+    </div>
+  );
+}
+
 function StudentCoursesPanel({ record, loading, error }) {
   const enrollments = (record?.enrollments || []).filter(
     item => item.status === 'enrolled' && item.course
@@ -2287,17 +2326,6 @@ export default function App() {
                     <strong>{studentRecord.department?.name || '-'}</strong>
                   </div>
                   <div className="profile-field">
-                    <span>Course enrollments</span>
-                    <strong>
-                      {(studentRecord.enrollments || [])
-                        .filter(item => item.status === 'enrolled' && item.course)
-                        .map(item => `${item.course.name} - ${semesterName(item.semester)}`)
-                        .join(', ') ||
-                        studentRecord.course?.name ||
-                        '-'}
-                    </strong>
-                  </div>
-                  <div className="profile-field">
                     <span>Admission year</span>
                     <strong>{studentRecord.admission_year || '-'}</strong>
                   </div>
@@ -2306,6 +2334,8 @@ export default function App() {
                     <strong>{studentRecord.status || '-'}</strong>
                   </div>
                 </div>
+
+                <EnrollmentTable enrollments={studentRecord.enrollments} />
 
                 <form onSubmit={saveStudentPhone} className="profile-edit-form">
                   <label htmlFor="student-profile-phone">Phone number</label>
@@ -2328,7 +2358,7 @@ export default function App() {
                     className="primary-button"
                     disabled={phoneSaving}
                   >
-                    {phoneSaving ? 'Saving...' : 'Save phone number'}
+                    {phoneSaving ? 'Saving...' : 'Save'}
                   </button>
                 </form>
               </>
@@ -2598,14 +2628,6 @@ export default function App() {
                       <strong>{selectedStudent.department?.name || '-'}</strong>
                     </div>
                     <div className="profile-field">
-                      <span>Course enrollments</span>
-                      <strong>
-                        {selectedStudent.enrollments?.filter(item => item.status === 'enrolled').length
-                          ? selectedStudent.enrollments.filter(item => item.status === 'enrolled').map(item => `${item.course?.name || 'Course'} - ${item.semester?.label || `Semester ${item.semester?.semester_number || ''}`}`).join(', ')
-                          : 'No course-semester enrollments loaded'}
-                      </strong>
-                    </div>
-                    <div className="profile-field">
                       <span>Admission year</span>
                       <strong>{selectedStudent.admission_year || '-'}</strong>
                     </div>
@@ -2614,6 +2636,8 @@ export default function App() {
                       <strong>{selectedStudent.status || '-'}</strong>
                     </div>
                   </div>
+
+                  <EnrollmentTable enrollments={selectedStudent.enrollments} />
 
                   <div className="modal-actions">
                     <button
