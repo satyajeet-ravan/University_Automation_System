@@ -350,6 +350,7 @@ export function createFacultyManagementRouter(supabaseAdmin) {
                     profile_id: createdUser.id,
                     department_id: values.department_id,
                     full_name: values.full_name,
+                    email: values.email,
                     designation: values.designation,
                     status: 'active'
                 })

@@ -21,7 +21,21 @@ const studentProfile = createStudentProfileHandlers(supabaseAdmin);
 const faculty = createFacultyHandlers(supabaseAdmin);
 
 const STUDENT_SELECT =
-  'id, student_code, profile_id, department_id, course_id, full_name, email, phone, admission_year, status, created_at, updated_at, department:departments(id, name, code), course:courses(id, name, code)';
+  'id, student_code, profile_id, department_id, course_id, full_name, email, phone, admission_year, status, created_at, updated_at, department:departments(id, name, code), course:courses(id, name, code), enrollments:student_semester_enrollments(id, status, course_id, semester_id, course:courses(id, name, code), semester:semesters(id, label, semester_number))';
+
+// Express 4 does not catch rejected promises from async handlers; without this
+// a transient network failure would crash the whole API process.
+const safe = handler => (req, res, next) =>
+  Promise.resolve(handler(req, res, next)).catch(error => {
+    console.error(
+      `[api] ${req.method} ${req.path} failed:`,
+      error?.message || 'unknown error'
+    );
+
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Unexpected server error.' });
+    }
+  });
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -291,6 +305,29 @@ router.get(
           .order('semester_number', { ascending: true })
       ]);
 
+      const courseSemesterResult = await supabaseAdmin
+        .from('course_semester_assignments')
+        .select('course_id, semester_id')
+        .eq('status', 'active');
+
+      if (courseSemesterResult.error) {
+        console.error(
+          '[students/options] Course semester query failed:',
+          courseSemesterResult.error
+        );
+
+        return res.status(500).json({
+          error: 'Could not load course semesters.'
+        });
+      }
+
+      const semesterByCourse = new Map(
+        (courseSemesterResult.data || []).map(item => [
+          item.course_id,
+          item.semester_id
+        ])
+      );
+
       if (departmentsResult.error) {
         console.error(
           '[students/options] Departments query failed:',
@@ -330,7 +367,10 @@ router.get(
 
       return res.status(200).json({
         departments: departmentsResult.data || [],
-        courses: coursesResult.data || [],
+        courses: (coursesResult.data || []).map(course => ({
+          ...course,
+          semester_id: semesterByCourse.get(course.id) || null
+        })),
         semesters: semestersResult.data || []
       });
     } catch (error) {
@@ -1031,14 +1071,16 @@ router.patch(
         });
       }
 
+      // Only re-validate placement when it actually changes, so records whose
+      // department/course was deactivated later can still be edited.
       const placementChanged =
-        Object.prototype.hasOwnProperty.call(
-          values,
-          'department_id'
+        (
+          Object.prototype.hasOwnProperty.call(values, 'department_id') &&
+          values.department_id !== current.department_id
         ) ||
-        Object.prototype.hasOwnProperty.call(
-          values,
-          'course_id'
+        (
+          Object.prototype.hasOwnProperty.call(values, 'course_id') &&
+          values.course_id !== current.course_id
         );
 
       if (placementChanged) {
@@ -1662,6 +1704,12 @@ router.post(
   requireAuth,
   requireAdmin,
   async (req, res) => {
+    if (!UUID_PATTERN.test(req.params.profileId)) {
+      return res.status(400).json({
+        error: 'Invalid registration ID.'
+      });
+    }
+
     try {
       const result =
         await studentVerification.review(
@@ -1695,6 +1743,18 @@ router.get(
   }
 );
 
+router.get(
+  '/profile/me/attendance',
+  requireAuth,
+  requireVerifiedStudent,
+  safe(async (req, res) => {
+    const result =
+      await studentProfile.attendance(req.user.id);
+
+    return res.status(result.status).json(result.body);
+  })
+);
+
 router.patch(
   '/profile/me',
   requireAuth,
@@ -1714,12 +1774,12 @@ router.get(
   '/faculty/me/dashboard',
   requireAuth,
   requireFaculty,
-  async (req, res) => {
+  safe(async (req, res) => {
     const result =
-      await faculty.dashboard(req.user.id);
+      await faculty.dashboard(req.user.id, req.user.email);
 
     return res.status(result.status).json(result.body);
-  }
+  })
 );
 
 // Initial Admin-only API foundations.
@@ -1735,7 +1795,7 @@ for (const [path, table] of adminListRoutes) {
     path,
     requireAuth,
     requireAdmin,
-    async (req, res) => {
+    safe(async (req, res) => {
       const limit = Math.min(
         Math.max(Number(req.query.limit || 50), 1),
         100
@@ -1764,7 +1824,7 @@ for (const [path, table] of adminListRoutes) {
         limit,
         offset
       });
-    }
+    })
   );
 }
 
@@ -1772,7 +1832,7 @@ router.get(
   '/reports/summary',
   requireAuth,
   requireAdmin,
-  async (_req, res) => {
+  safe(async (_req, res) => {
     const tables = [
       'students',
       'faculty',
@@ -1803,7 +1863,7 @@ router.get(
     }
 
     return res.json({ summary });
-  }
+  })
 );
 
 router.use(

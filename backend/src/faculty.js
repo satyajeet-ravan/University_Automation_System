@@ -1,7 +1,7 @@
 
 export function createFacultyHandlers(supabaseAdmin) {
   return {
-    async dashboard(profileId) {
+    async dashboard(profileId, authEmail = null) {
       const { data: faculty, error: facultyError } = await supabaseAdmin
         .from('faculty')
         .select(`
@@ -31,6 +31,9 @@ export function createFacultyHandlers(supabaseAdmin) {
           body: { error: 'No active faculty record is linked to this account.' }
         };
       }
+
+      // Older faculty rows may not have a stored email; fall back to the login email.
+      faculty.email = faculty.email || authEmail || null;
 
       const { data: assignments, error: assignmentsError } =
         await supabaseAdmin
@@ -66,7 +69,7 @@ export function createFacultyHandlers(supabaseAdmin) {
       }
 
       const courses = (assignments || [])
-        .filter(assignment => assignment.course)
+        .filter(assignment => assignment.course && assignment.course.status === 'active')
         .map(assignment => ({
           assignment_id: assignment.id,
           assignment_status: assignment.status,

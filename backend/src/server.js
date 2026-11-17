@@ -21,6 +21,11 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ error: 'Unexpected server error.' });
 });
 
+// Keep the API alive if a stray async failure escapes a route handler.
+process.on('unhandledRejection', reason => {
+  console.error('[api] Unhandled promise rejection:', reason?.message || reason);
+});
+
 const server = app.listen(config.port, () => {
   console.log(`University Automation API listening on http://localhost:${config.port}`);
   if (config.supabaseUrl && config.serviceRoleKey) {

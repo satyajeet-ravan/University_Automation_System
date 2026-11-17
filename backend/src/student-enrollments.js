@@ -163,6 +163,34 @@ export function createStudentEnrollmentsRouter(supabaseAdmin) {
                         });
                     }
                 }
+
+                // A course runs in the semester it is assigned to in Academic
+                // Management; enrolling elsewhere would hide the student from
+                // the faculty attendance roster.
+                const { data: courseSemesters, error: courseSemesterError } =
+                    await supabaseAdmin
+                        .from('course_semester_assignments')
+                        .select('course_id, semester_id')
+                        .in('course_id', courseIds)
+                        .eq('status', 'active');
+
+                if (courseSemesterError) {
+                    return res.status(500).json({
+                        error: 'Could not validate the course semester assignments.'
+                    });
+                }
+
+                const assigned = new Set(
+                    (courseSemesters || []).map(item => `${item.course_id}:${item.semester_id}`)
+                );
+
+                for (const enrollment of enrollments) {
+                    if (!assigned.has(`${enrollment.course_id}:${enrollment.semester_id}`)) {
+                        return res.status(400).json({
+                            error: 'Each course can only be enrolled in the semester it is assigned to in Academic Management.'
+                        });
+                    }
+                }
             }
 
             const { data: existing, error: existingError } = await supabaseAdmin
@@ -191,7 +219,7 @@ export function createStudentEnrollmentsRouter(supabaseAdmin) {
             if (toWithdraw.length) {
                 const { error } = await supabaseAdmin
                     .from('student_semester_enrollments')
-                    .update({ status: 'withdrawn' })
+                    .update({ status: 'withdrawn', updated_at: new Date().toISOString() })
                     .in('id', toWithdraw.map(item => item.id));
 
                 if (error) {
@@ -207,7 +235,8 @@ export function createStudentEnrollmentsRouter(supabaseAdmin) {
                     student_id: studentId,
                     course_id: item.course_id,
                     semester_id: item.semester_id,
-                    status: 'enrolled'
+                    status: 'enrolled',
+                    updated_at: new Date().toISOString()
                 }));
 
                 const { error } = await supabaseAdmin

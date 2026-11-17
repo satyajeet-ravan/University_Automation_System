@@ -9,7 +9,8 @@ const STUDENT_PROFILE_SELECT = [
   'admission_year',
   'status',
   'department:departments(id, name, code)',
-  'course:courses(id, name, code, subjects(id, name, code, credits, status))'
+  'course:courses(id, name, code, subjects(id, name, code, credits, status))',
+  'enrollments:student_semester_enrollments(id, status, course_id, semester_id, course:courses(id, name, code, department:departments(id, name, code), subjects(id, name, code, credits, status)), semester:semesters(id, label, semester_number, academic_year:academic_years(id, label, year_code)))'
 ].join(', ');
 
 function validatePhoneUpdate(body) {
@@ -108,6 +109,103 @@ export function createStudentProfileHandlers(supabaseAdmin) {
           status: 500,
           body: { error: 'Could not load student profile.' }
         };
+      }
+    },
+
+    async attendance(profileId) {
+      try {
+        const { data: student, error: studentError } = await supabaseAdmin
+          .from('students')
+          .select('id')
+          .eq('profile_id', profileId)
+          .maybeSingle();
+
+        if (studentError) {
+          console.error('[profile] Attendance student lookup failed:', studentError.message);
+          return { status: 500, body: { error: 'Could not load attendance.' } };
+        }
+
+        if (!student) {
+          return {
+            status: 404,
+            body: { error: 'No student record is linked to this account.' }
+          };
+        }
+
+        const { data: records, error: recordsError } = await supabaseAdmin
+          .from('attendance_records')
+          .select(`
+            attendance_status,
+            remarks,
+            session:attendance_sessions!inner(
+              id, course_id, semester_id, session_date, topic, status,
+              course:courses(id, name, code),
+              semester:semesters(id, label, semester_number)
+            )
+          `)
+          .eq('student_id', student.id)
+          .eq('session.status', 'submitted');
+
+        if (recordsError) {
+          console.error('[profile] Attendance lookup failed:', recordsError.message);
+          return {
+            status: 500,
+            body: { error: 'Could not load attendance. Verify that migration 011 has been applied.' }
+          };
+        }
+
+        const byCourse = new Map();
+        const entries = [];
+
+        for (const record of records || []) {
+          const session = record.session;
+          if (!session) continue;
+
+          const key = `${session.course_id}:${session.semester_id}`;
+          const summary = byCourse.get(key) || {
+            course: session.course,
+            semester: session.semester,
+            total: 0,
+            present: 0,
+            late: 0,
+            absent: 0
+          };
+
+          summary.total += 1;
+          if (record.attendance_status in summary) {
+            summary[record.attendance_status] += 1;
+          }
+
+          byCourse.set(key, summary);
+
+          entries.push({
+            session_id: session.id,
+            session_date: session.session_date,
+            topic: session.topic,
+            course: session.course,
+            semester: session.semester,
+            attendance_status: record.attendance_status,
+            remarks: record.remarks
+          });
+        }
+
+        entries.sort((a, b) => b.session_date.localeCompare(a.session_date));
+
+        const summaries = [...byCourse.values()].map(item => ({
+          ...item,
+          // Late students attended the session, so they count toward attendance.
+          percentage: item.total
+            ? Math.round(((item.present + item.late) / item.total) * 1000) / 10
+            : null
+        }));
+
+        return {
+          status: 200,
+          body: { summaries, records: entries.slice(0, 200) }
+        };
+      } catch (error) {
+        console.error('[profile] Unexpected attendance failure:', error?.message || 'unknown error');
+        return { status: 500, body: { error: 'Could not load attendance.' } };
       }
     },
 

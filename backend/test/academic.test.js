@@ -26,6 +26,23 @@ function createDatabaseMock({ responses = {}, handler } = {}) {
           call.filters.push([column, value]);
           return builder;
         },
+        in(column, values) {
+          call.filters.push([column, values]);
+          return builder;
+        },
+        neq(column, value) {
+          call.filters.push([column, value]);
+          return builder;
+        },
+        upsert(payload) {
+          call.operation = 'upsert';
+          call.payload = payload;
+          return builder;
+        },
+        delete() {
+          call.operation = 'delete';
+          return builder;
+        },
         limit(value) {
           call.limit = value;
           return builder;
@@ -155,7 +172,7 @@ test('course deactivation is blocked while active subjects remain', async () => 
     const response = await fetch(`${baseUrl}/courses/${COURSE_ID}`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ department_id: DEPARTMENT_ID, name: 'Engineering', code: 'ENG', status: 'inactive' })
+      body: JSON.stringify({ department_id: DEPARTMENT_ID, semester_id: SEMESTER_ID, name: 'Engineering', code: 'ENG', status: 'inactive' })
     });
     assert.equal(response.status, 409);
     assert.ok(db.calls.some(call => call.table === 'subjects'
@@ -178,44 +195,75 @@ test('semester dates must be valid and fall within the selected academic year', 
   });
 });
 
-test('courses and subjects validate existing foreign-key relationships', async () => {
+test('courses validate existing department and semester relationships', async () => {
   const noDepartment = createDatabaseMock({ responses: { departments: [{ data: null, error: null }] } });
-  const noCourse = createDatabaseMock({ responses: { courses: [{ data: null, error: null }] } });
+  const noSemester = createDatabaseMock({
+    responses: {
+      departments: [{ data: { id: DEPARTMENT_ID, status: 'active' }, error: null }],
+      semesters: [{ data: null, error: null }]
+    }
+  });
+  const missingSemester = createDatabaseMock();
 
   await withServer(noDepartment, {}, async baseUrl => {
+    const response = await fetch(`${baseUrl}/courses`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ department_id: DEPARTMENT_ID, semester_id: SEMESTER_ID, name: 'Engineering', code: 'ENG' })
+    });
+    assert.equal(response.status, 400);
+  });
+  await withServer(noSemester, {}, async baseUrl => {
+    const response = await fetch(`${baseUrl}/courses`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ department_id: DEPARTMENT_ID, semester_id: SEMESTER_ID, name: 'Engineering', code: 'ENG' })
+    });
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /semester does not exist/);
+  });
+  await withServer(missingSemester, {}, async baseUrl => {
     const response = await fetch(`${baseUrl}/courses`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ department_id: DEPARTMENT_ID, name: 'Engineering', code: 'ENG' })
     });
     assert.equal(response.status, 400);
-  });
-  await withServer(noCourse, {}, async baseUrl => {
-    const response = await fetch(`${baseUrl}/subjects`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ course_id: COURSE_ID, name: 'Mathematics', code: 'MATH101', credits: 4 })
-    });
-    assert.equal(response.status, 400);
+    assert.equal(missingSemester.calls.length, 0);
   });
 });
 
-test('subject offerings reject a subject belonging to a different course', async () => {
+test('a course can be deactivated even when its assigned semester is now inactive', async () => {
   const db = createDatabaseMock({
-    responses: {
-      semesters: [{ data: { id: SEMESTER_ID, status: 'active' }, error: null }],
-      courses: [{ data: { id: COURSE_ID, status: 'active' }, error: null }],
-      subjects: [{ data: { id: SUBJECT_ID, course_id: DEPARTMENT_ID, status: 'active' }, error: null }]
+    handler: call => {
+      if (call.table === 'departments') return { data: { id: DEPARTMENT_ID, status: 'active' }, error: null };
+      if (call.table === 'course_semester_assignments' && call.operation === 'select') {
+        return { data: { semester_id: SEMESTER_ID }, error: null };
+      }
+      if (call.table === 'semesters') return { data: { id: SEMESTER_ID, status: 'inactive' }, error: null };
+      if (call.table === 'courses') return { data: { id: COURSE_ID, status: 'inactive' }, error: null };
+      return { data: null, error: null };
     }
   });
+  await withServer(db, {}, async baseUrl => {
+    const response = await fetch(`${baseUrl}/courses/${COURSE_ID}`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ department_id: DEPARTMENT_ID, semester_id: SEMESTER_ID, name: 'Engineering', code: 'ENG', status: 'inactive' })
+    });
+    assert.equal(response.status, 200);
+  });
+});
 
+test('academic list endpoint reports subject and offering management as unsupported routes', async () => {
+  const db = createDatabaseMock();
   await withServer(db, {}, async baseUrl => {
     const response = await fetch(`${baseUrl}/offerings`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ semester_id: SEMESTER_ID, course_id: COURSE_ID, subject_id: SUBJECT_ID })
+      body: JSON.stringify({})
     });
-    assert.equal(response.status, 400);
-    assert.match((await response.json()).error, /belong to the selected course/);
+    assert.equal(response.status, 404);
+    assert.equal(db.calls.length, 0);
   });
 });

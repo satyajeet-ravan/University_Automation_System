@@ -405,47 +405,36 @@ async function validateReferences(db, resource, values, recordId) {
       return {
         status: 409,
         body: {
-          error: 'Deactivate this semester’s active offerings and course assignments first.'
+          error: 'This semester still has active offerings or courses assigned to it. Move those courses to another semester first.'
         }
       };
     }
   }
 
   if (recordId && resource === 'courses' && values.status === 'inactive') {
-    const [subjects, offerings, assignments, semesterAssignments] =
-      await Promise.all([
-        db.from('subjects').select('id')
-          .eq('course_id', recordId).eq('status', 'active')
-          .limit(1).maybeSingle(),
-        db.from('subject_offerings').select('id')
-          .eq('course_id', recordId).eq('status', 'active')
-          .limit(1).maybeSingle(),
-        db.from('course_faculty_assignments').select('id')
-          .eq('course_id', recordId).eq('status', 'active')
-          .limit(1).maybeSingle(),
-        db.from('course_semester_assignments').select('id')
-          .eq('course_id', recordId).eq('status', 'active')
-          .limit(1).maybeSingle()
-      ]);
+    // Professor and semester assignments are kept (so the course can be
+    // reactivated later); only live subject records block deactivation.
+    const [subjects, offerings] = await Promise.all([
+      db.from('subjects').select('id')
+        .eq('course_id', recordId).eq('status', 'active')
+        .limit(1).maybeSingle(),
+      db.from('subject_offerings').select('id')
+        .eq('course_id', recordId).eq('status', 'active')
+        .limit(1).maybeSingle()
+    ]);
 
-    if (
-      subjects.error || offerings.error ||
-      assignments.error || semesterAssignments.error
-    ) {
+    if (subjects.error || offerings.error) {
       return {
         status: 500,
         body: { error: 'Could not check active course records.' }
       };
     }
 
-    if (
-      subjects.data || offerings.data ||
-      assignments.data || semesterAssignments.data
-    ) {
+    if (subjects.data || offerings.data) {
       return {
         status: 409,
         body: {
-          error: 'Deactivate this course’s active subjects, offerings, professor assignments, and semester assignments first.'
+          error: 'Deactivate this course’s active subjects and offerings first.'
         }
       };
     }
@@ -454,7 +443,7 @@ async function validateReferences(db, resource, values, recordId) {
   return null;
 }
 
-async function validateSemesterId(db, semesterId) {
+async function validateSemesterId(db, semesterId, { currentSemesterId } = {}) {
   if (!semesterId) {
     return {
       status: 400,
@@ -487,7 +476,9 @@ async function validateSemesterId(db, semesterId) {
     };
   }
 
-  if (data.status !== 'active') {
+  // Keeping an already-assigned semester is allowed even if it is now inactive,
+  // so a course can still be edited, deactivated, or reactivated.
+  if (data.status !== 'active' && semesterId !== currentSemesterId) {
     return {
       status: 400,
       body: {
@@ -500,7 +491,7 @@ async function validateSemesterId(db, semesterId) {
   return null;
 }
 
-async function validateFacultyIds(db, facultyIds) {
+async function validateFacultyIds(db, facultyIds, { alreadyAssigned = new Set() } = {}) {
   if (facultyIds === undefined || facultyIds.length === 0) return null;
 
   const { data, error } = await db.from('faculty')
@@ -526,7 +517,7 @@ async function validateFacultyIds(db, facultyIds) {
       };
     }
 
-    if (faculty.status !== 'active') {
+    if (faculty.status !== 'active' && !alreadyAssigned.has(id)) {
       return {
         status: 400,
         body: { error: 'Only active faculty members can be assigned to a course.' }
@@ -829,12 +820,31 @@ export function createAcademicRouter(
         }
 
         if (resource === 'courses') {
-          const semesterError = await validateSemesterId(db, semesterId);
+          const [currentSemester, currentFaculty] = await Promise.all([
+            db.from('course_semester_assignments')
+              .select('semester_id')
+              .eq('course_id', req.params.id)
+              .eq('status', 'active')
+              .limit(1)
+              .maybeSingle(),
+            db.from('course_faculty_assignments')
+              .select('faculty_id')
+              .eq('course_id', req.params.id)
+              .eq('status', 'active')
+          ]);
+
+          const semesterError = await validateSemesterId(db, semesterId, {
+            currentSemesterId: currentSemester?.data?.semester_id
+          });
           if (semesterError) {
             return res.status(semesterError.status).json(semesterError.body);
           }
 
-          const facultyError = await validateFacultyIds(db, facultyIds);
+          const facultyError = await validateFacultyIds(db, facultyIds, {
+            alreadyAssigned: new Set(
+              (currentFaculty?.data || []).map(item => item.faculty_id)
+            )
+          });
           if (facultyError) {
             return res.status(facultyError.status).json(facultyError.body);
           }

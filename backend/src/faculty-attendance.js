@@ -34,6 +34,14 @@ function validDate(value) {
         date.toISOString().slice(0, 10) === value;
 }
 
+// Attendance cannot be recorded for a future date. One day of slack covers
+// time zones that are ahead of the server's UTC date.
+function isFutureDate(value) {
+    const limit = new Date(Date.now() + 24 * 60 * 60 * 1000)
+        .toISOString().slice(0, 10);
+    return value > limit;
+}
+
 function cleanText(value, maxLength = 500) {
     if (value == null) return null;
     if (typeof value !== 'string') return undefined;
@@ -171,6 +179,20 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
         return Boolean(data);
     }
 
+    // The semester must be the one the course is currently assigned to.
+    async function hasCourseSemester(courseId, semesterId) {
+        const { data, error } = await supabaseAdmin
+            .from('course_semester_assignments')
+            .select('id')
+            .eq('course_id', courseId)
+            .eq('semester_id', semesterId)
+            .eq('status', 'active')
+            .maybeSingle();
+
+        if (error) throw error;
+        return Boolean(data);
+    }
+
     async function getSession(sessionId, facultyId) {
         const { data, error } = await supabaseAdmin
             .from('attendance_sessions')
@@ -181,10 +203,13 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
         semester:semesters(id, label, semester_number, status)
       `)
             .eq('id', sessionId)
-            .eq('faculty_id', facultyId)
             .maybeSingle();
 
         if (error) throw error;
+        // Any faculty member assigned to the course may manage its sessions.
+        if (!data || !(await hasCourseAssignment(facultyId, data.course_id))) {
+            return null;
+        }
         return data;
     }
 
@@ -200,6 +225,7 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
           id,
           name,
           code,
+          status,
           department_id,
           department:departments(id, name, code)
         )
@@ -216,7 +242,7 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
 
             const courses = (assignments || [])
                 .map(item => item.course)
-                .filter(Boolean);
+                .filter(course => course && course.status === 'active');
 
             const uniqueCourses = [
                 ...new Map(courses.map(course => [course.id, course])).values()
@@ -337,7 +363,6 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
             const { data, error } = await supabaseAdmin
                 .from('attendance_sessions')
                 .select('id, course_id, semester_id, session_date, topic, status, submitted_at, updated_at')
-                .eq('faculty_id', req.faculty.id)
                 .eq('course_id', courseId)
                 .eq('semester_id', semesterId)
                 .order('session_date', { ascending: false });
@@ -363,6 +388,9 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
             if (!(await hasCourseAssignment(req.faculty.id, courseId))) {
                 return res.status(403).json({ error: 'You are not assigned to this course.' });
             }
+            if (!(await hasCourseSemester(courseId, semesterId))) {
+                return res.status(400).json({ error: 'This course is not assigned to the selected semester.' });
+            }
 
             const { data: enrollments, error: enrollmentError } = await supabaseAdmin
                 .from('student_semester_enrollments')
@@ -380,7 +408,6 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
             const [sessionResult, studentsResult] = await Promise.all([
                 supabaseAdmin.from('attendance_sessions')
                     .select('id, status, topic, notes, submitted_at')
-                    .eq('faculty_id', req.faculty.id)
                     .eq('course_id', courseId)
                     .eq('semester_id', semesterId)
                     .eq('session_date', date)
@@ -449,6 +476,9 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
             !validDate(sessionDate)) {
             return res.status(400).json({ error: 'Select a valid course, semester, and date.' });
         }
+        if (isFutureDate(sessionDate)) {
+            return res.status(400).json({ error: 'Attendance cannot be recorded for a future date.' });
+        }
         if (topic === undefined || notes === undefined) {
             return res.status(400).json({ error: 'Topic or notes are invalid.' });
         }
@@ -473,6 +503,9 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
         try {
             if (!(await hasCourseAssignment(req.faculty.id, courseId))) {
                 return res.status(403).json({ error: 'You are not assigned to this course.' });
+            }
+            if (!(await hasCourseSemester(courseId, semesterId))) {
+                return res.status(400).json({ error: 'This course is not assigned to the selected semester.' });
             }
 
             const { data: enrollmentRows, error: enrollmentError } = await supabaseAdmin
@@ -503,9 +536,6 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                 .maybeSingle();
 
             if (existingError) return sendDbError(res, 'check attendance session', existingError);
-            if (existing?.faculty_id && existing.faculty_id !== req.faculty.id) {
-                return res.status(403).json({ error: 'This session belongs to another faculty member.' });
-            }
             if (existing?.status === 'submitted') {
                 return res.status(409).json({ error: 'This session has been submitted. Reopen it before editing.' });
             }
@@ -516,7 +546,6 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                     .from('attendance_sessions')
                     .update({ topic, notes, updated_at: new Date().toISOString() })
                     .eq('id', existing.id)
-                    .eq('faculty_id', req.faculty.id)
                     .select('*')
                     .single();
 
@@ -645,7 +674,6 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                     updated_at: submittedAt
                 })
                 .eq('id', session.id)
-                .eq('faculty_id', req.faculty.id)
                 .select('*')
                 .single();
 
@@ -753,7 +781,6 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                     updated_at: new Date().toISOString()
                 })
                 .eq('id', session.id)
-                .eq('faculty_id', req.faculty.id)
                 .select('*')
                 .single();
 
