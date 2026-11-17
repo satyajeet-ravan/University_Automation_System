@@ -238,27 +238,6 @@ export function createStudentEnrollmentsRouter(supabaseAdmin) {
                 enrollments.map(item => `${item.course_id}:${item.semester_id}`)
             );
 
-            // Preserve history by withdrawing selections that were removed.
-            const toWithdraw = (existing || []).filter(
-                item =>
-                    item.status === 'enrolled' &&
-                    !selectedKeys.has(`${item.course_id}:${item.semester_id}`)
-            );
-
-            if (toWithdraw.length) {
-                const { error } = await supabaseAdmin
-                    .from('student_semester_enrollments')
-                    .update({ status: 'withdrawn', updated_at: new Date().toISOString() })
-                    .in('id', toWithdraw.map(item => item.id));
-
-                if (error) {
-                    console.error('[enrollments] Withdrawal failed:', error.message);
-                    return res.status(500).json({
-                        error: 'Could not update removed enrollments.'
-                    });
-                }
-            }
-
             if (enrollments.length) {
                 // Update-or-insert by hand rather than upsert, so saving does not
                 // depend on a database unique constraint existing for the pair.
@@ -311,6 +290,29 @@ export function createStudentEnrollmentsRouter(supabaseAdmin) {
                             error: 'Could not save course enrollments. Apply migration 013 in Supabase (it fixes the enrollment table constraints), then retry.'
                         });
                     }
+                }
+            }
+
+            // Withdraw last, so a failed insert never leaves the student with fewer
+            // enrollments than before.
+            // History is preserved: removed selections are marked withdrawn.
+            const toWithdraw = (existing || []).filter(
+                item =>
+                    item.status === 'enrolled' &&
+                    !selectedKeys.has(`${item.course_id}:${item.semester_id}`)
+            );
+
+            if (toWithdraw.length) {
+                const { error } = await supabaseAdmin
+                    .from('student_semester_enrollments')
+                    .update({ status: 'withdrawn', updated_at: new Date().toISOString() })
+                    .in('id', toWithdraw.map(item => item.id));
+
+                if (error) {
+                    console.error('[enrollments] Withdrawal failed:', error.message);
+                    return res.status(500).json({
+                        error: 'Could not update removed enrollments.'
+                    });
                 }
             }
 
