@@ -753,6 +753,14 @@ export default function AdminExamFeedback({ token }) {
                   {results.data.submission_count === 1 ? '' : 's'} submitted.
                 </p>
 
+                <ol className="feedback-legend">
+                  {results.data.criteria.map((item, index) => (
+                    <li key={item.key}>
+                      <strong>Q{index + 1}</strong> {item.label}
+                    </li>
+                  ))}
+                </ol>
+
                 <div className="table-wrap">
                   <table>
                     <thead>
@@ -760,8 +768,10 @@ export default function AdminExamFeedback({ token }) {
                         <th>Subject</th>
                         <th>Teacher</th>
                         <th>Responses</th>
-                        {results.data.criteria.map(item => (
-                          <th key={item.key}>{item.label}</th>
+                        {results.data.criteria.map((item, index) => (
+                          <th key={item.key} title={item.label}>
+                            Q{index + 1}
+                          </th>
                         ))}
                         <th>Overall</th>
                       </tr>
