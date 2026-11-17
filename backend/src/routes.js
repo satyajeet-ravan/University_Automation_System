@@ -14,6 +14,7 @@ import { createFacultyManagementRouter } from './faculty-management.js';
 import { createFacultyAttendanceRouter } from './faculty-attendance.js';
 import { createStudentEnrollmentsRouter } from './student-enrollments.js';
 import { attachEnrollments } from './student-enrollment-loader.js';
+import { resolveCurriculum } from './curriculum.js';
 
 const router = Router();
 
@@ -385,6 +386,37 @@ router.get(
       });
     }
   }
+);
+
+router.get(
+  '/students/curriculum',
+  requireAuth,
+  requireAdmin,
+  safe(async (_req, res) => {
+    const [departments, semesters, courses] = await Promise.all([
+      supabaseAdmin.from('departments').select('id, name').eq('status', 'active'),
+      supabaseAdmin
+        .from('semesters')
+        .select('id, semester_number')
+        .eq('status', 'active'),
+      supabaseAdmin.from('courses').select('id, code, name').eq('status', 'active')
+    ]);
+
+    const failed = [departments, semesters, courses].find(item => item.error);
+
+    if (failed) {
+      console.error('[students/curriculum] Query failed:', failed.error.message);
+      return res.status(500).json({ error: 'Could not load the course curriculum.' });
+    }
+
+    return res.json({
+      programs: resolveCurriculum({
+        departments: departments.data || [],
+        semesters: semesters.data || [],
+        courses: courses.data || []
+      })
+    });
+  })
 );
 
 router.get(

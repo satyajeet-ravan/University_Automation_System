@@ -1,6 +1,7 @@
 
 import { Router } from 'express';
 import { requireAuth, requireAdmin } from './middleware/auth.js';
+import { getCurriculum } from './curriculum.js';
 
 const UUID_PATTERN =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -128,7 +129,7 @@ export function createStudentEnrollmentsRouter(supabaseAdmin) {
 
                     supabaseAdmin
                         .from('semesters')
-                        .select('id, status')
+                        .select('id, status, semester_number')
                         .in('id', semesterIds)
                 ]);
 
@@ -184,8 +185,36 @@ export function createStudentEnrollmentsRouter(supabaseAdmin) {
                     (courseSemesters || []).map(item => `${item.course_id}:${item.semester_id}`)
                 );
 
+                // A few shared courses sit in different semesters for different
+                // branches, so the branch curriculum is accepted as well.
+                const numberBySemester = new Map(
+                    (semestersResult.data || []).map(item => [item.id, item.semester_number])
+                );
+                const codeByCourse = new Map();
+                const { data: courseCodes } = await supabaseAdmin
+                    .from('courses')
+                    .select('id, code')
+                    .in('id', courseIds);
+                for (const item of courseCodes || []) codeByCourse.set(item.id, item.code);
+
+                const curriculumPairs = new Set();
+                for (const program of getCurriculum()) {
+                    for (const semester of program.semesters) {
+                        for (const course of semester.courses) {
+                            curriculumPairs.add(`${course.code}:${semester.number}`);
+                        }
+                    }
+                }
+
                 for (const enrollment of enrollments) {
-                    if (!assigned.has(`${enrollment.course_id}:${enrollment.semester_id}`)) {
+                    const inCurriculum = curriculumPairs.has(
+                        `${codeByCourse.get(enrollment.course_id)}:${numberBySemester.get(enrollment.semester_id)}`
+                    );
+
+                    if (
+                        !assigned.has(`${enrollment.course_id}:${enrollment.semester_id}`) &&
+                        !inCurriculum
+                    ) {
                         return res.status(400).json({
                             error: 'Each course can only be enrolled in the semester it is assigned to in Academic Management.'
                         });
