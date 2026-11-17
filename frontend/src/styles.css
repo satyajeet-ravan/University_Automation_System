@@ -6044,3 +6044,23 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+/* Compact course list in the student table */
+.student-course-details {
+  min-width: 200px;
+}
+
+.student-course-details summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.student-course-details ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 0.85rem;
+}
+
+.student-course-details li {
+  margin-bottom: 4px;
+}
