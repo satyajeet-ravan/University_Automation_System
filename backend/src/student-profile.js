@@ -147,19 +147,31 @@ export function createStudentProfileHandlers(supabaseAdmin) {
           };
         }
 
-        const { data: records, error: recordsError } = await supabaseAdmin
-          .from('attendance_records')
-          .select(`
-            attendance_status,
-            remarks,
-            session:attendance_sessions!inner(
-              id, course_id, semester_id, session_date, topic, status,
+        const [recordsResult, enrollmentsResult] = await Promise.all([
+          supabaseAdmin
+            .from('attendance_records')
+            .select(`
+              attendance_status,
+              remarks,
+              session:attendance_sessions!inner(
+                id, course_id, semester_id, session_date, topic, status,
+                course:courses(id, name, code),
+                semester:semesters(id, label, semester_number)
+              )
+            `)
+            .eq('student_id', student.id),
+          supabaseAdmin
+            .from('student_semester_enrollments')
+            .select(`
+              course_id, semester_id,
               course:courses(id, name, code),
               semester:semesters(id, label, semester_number)
-            )
-          `)
-          .eq('student_id', student.id)
-          .eq('session.status', 'submitted');
+            `)
+            .eq('student_id', student.id)
+            .eq('status', 'enrolled')
+        ]);
+
+        const recordsError = recordsResult.error || enrollmentsResult.error;
 
         if (recordsError) {
           console.error('[profile] Attendance lookup failed:', recordsError.message);
@@ -172,23 +184,40 @@ export function createStudentProfileHandlers(supabaseAdmin) {
         const byCourse = new Map();
         const entries = [];
 
-        for (const record of records || []) {
+        const emptySummary = (course, semester) => ({
+          course,
+          semester,
+          total: 0,
+          present: 0,
+          late: 0,
+          absent: 0,
+          last_date: null
+        });
+
+        // Every enrolled subject is listed, even before any session is saved.
+        for (const item of enrollmentsResult.data || []) {
+          byCourse.set(
+            `${item.course_id}:${item.semester_id}`,
+            emptySummary(item.course, item.semester)
+          );
+        }
+
+        for (const record of recordsResult.data || []) {
           const session = record.session;
           if (!session) continue;
 
+          // Saved (open) sessions count too, so attendance shows up as soon
+          // as the faculty member saves it; entries are flagged as not final.
           const key = `${session.course_id}:${session.semester_id}`;
-          const summary = byCourse.get(key) || {
-            course: session.course,
-            semester: session.semester,
-            total: 0,
-            present: 0,
-            late: 0,
-            absent: 0
-          };
+          const summary =
+            byCourse.get(key) || emptySummary(session.course, session.semester);
 
           summary.total += 1;
           if (record.attendance_status in summary) {
             summary[record.attendance_status] += 1;
+          }
+          if (!summary.last_date || session.session_date > summary.last_date) {
+            summary.last_date = session.session_date;
           }
 
           byCourse.set(key, summary);
@@ -200,13 +229,16 @@ export function createStudentProfileHandlers(supabaseAdmin) {
             course: session.course,
             semester: session.semester,
             attendance_status: record.attendance_status,
-            remarks: record.remarks
+            remarks: record.remarks,
+            session_status: session.status
           });
         }
 
         entries.sort((a, b) => b.session_date.localeCompare(a.session_date));
 
-        const summaries = [...byCourse.values()].map(item => ({
+        const summaries = [...byCourse.values()]
+          .sort((x, y) => (x.course?.name || '').localeCompare(y.course?.name || ''))
+          .map(item => ({
           ...item,
           // Late students attended the session, so they count toward attendance.
           percentage: item.total
