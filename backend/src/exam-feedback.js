@@ -397,7 +397,16 @@ export function createExamFeedbackRouter(db, photoHandlers) {
           'count eligible students'
         );
 
-        eligible = new Set(enrolled.map(row => row.student_id)).size;
+        // Enrollments left behind by deleted students must not be counted.
+        const studentIds = [...new Set(enrolled.map(row => row.student_id))];
+        const existing = studentIds.length
+          ? check(
+            await db.from('students').select('id').in('id', studentIds),
+            'count eligible students'
+          )
+          : [];
+
+        eligible = existing.length;
       }
 
       check(submissions, 'count submissions');
