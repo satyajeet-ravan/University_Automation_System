@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     AlertCircle,
     CalendarDays,
@@ -45,7 +45,15 @@ export default function FacultyAttendance({ token }) {
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
 
+    const rosterRequest = useRef(0);
     const isSubmitted = session?.status === 'submitted';
+    const selectedCourse = courses.find(course => course.id === courseId);
+
+    // A course runs in the semester assigned to it; offer only that semester.
+    const semesterOptions = useMemo(() => {
+        if (!selectedCourse?.semester_id) return semesters;
+        return semesters.filter(item => item.id === selectedCourse.semester_id);
+    }, [semesters, selectedCourse]);
 
     const counts = useMemo(() => {
         return students.reduce((result, student) => {
@@ -107,7 +115,9 @@ export default function FacultyAttendance({ token }) {
         }
     }, [token, courseId, semesterId]);
 
-    const loadRoster = useCallback(async () => {
+    const loadRoster = useCallback(async ({ keepFeedback = false } = {}) => {
+        const requestId = ++rosterRequest.current;
+
         if (!courseId || !semesterId || !date) {
             setStudents([]);
             setSession(null);
@@ -115,8 +125,10 @@ export default function FacultyAttendance({ token }) {
         }
 
         setLoadingRoster(true);
-        setError('');
-        setMessage('');
+        if (!keepFeedback) {
+            setError('');
+            setMessage('');
+        }
 
         try {
             const params = new URLSearchParams({
@@ -130,16 +142,21 @@ export default function FacultyAttendance({ token }) {
                 { token }
             );
 
+            // Ignore responses that were superseded by a newer selection.
+            if (requestId !== rosterRequest.current) return;
+
             setSession(result.session || null);
             setTopic(result.session?.topic || '');
             setNotes(result.session?.notes || '');
             setStudents(Array.isArray(result.students) ? result.students : []);
         } catch (requestError) {
+            if (requestId !== rosterRequest.current) return;
+
             setStudents([]);
             setSession(null);
             setError(requestError?.message || 'Could not load the student roster.');
         } finally {
-            setLoadingRoster(false);
+            if (requestId === rosterRequest.current) setLoadingRoster(false);
         }
     }, [token, courseId, semesterId, date]);
 
@@ -154,6 +171,19 @@ export default function FacultyAttendance({ token }) {
     useEffect(() => {
         loadRoster();
     }, [loadRoster]);
+
+    // Keep the semester in step with the selected course.
+    useEffect(() => {
+        if (!selectedCourse) return;
+
+        const allowed = selectedCourse.semester_id
+            ? [selectedCourse.semester_id]
+            : semesters.map(item => item.id);
+
+        if (!allowed.includes(semesterId)) {
+            setSemesterId(allowed[0] || '');
+        }
+    }, [selectedCourse, semesters, semesterId]);
 
     function changeStatus(studentId, status) {
         setStudents(current => current.map(student =>
@@ -217,7 +247,7 @@ export default function FacultyAttendance({ token }) {
             setSession(result.session || null);
             setMessage(result.message || 'Attendance saved successfully.');
             await loadSessions();
-            await loadRoster();
+            await loadRoster({ keepFeedback: true });
         } catch (requestError) {
             setError(requestError?.message || 'Could not save attendance.');
         } finally {
@@ -247,7 +277,7 @@ export default function FacultyAttendance({ token }) {
             setSession(result.session || session);
             setMessage(result.message || 'Attendance submitted successfully.');
             await loadSessions();
-            await loadRoster();
+            await loadRoster({ keepFeedback: true });
         } catch (requestError) {
             setError(requestError?.message || 'Could not submit attendance.');
         } finally {
@@ -272,7 +302,7 @@ export default function FacultyAttendance({ token }) {
             setSession(result.session || null);
             setMessage(result.message || 'Attendance session reopened.');
             await loadSessions();
-            await loadRoster();
+            await loadRoster({ keepFeedback: true });
         } catch (requestError) {
             setError(requestError?.message || 'Could not reopen the session.');
         } finally {
@@ -373,7 +403,7 @@ export default function FacultyAttendance({ token }) {
                                 onChange={event => setSemesterId(event.target.value)}
                                 disabled={saving}
                             >
-                                {semesters.map(semester => (
+                                {semesterOptions.map(semester => (
                                     <option key={semester.id} value={semester.id}>
                                         {semester.name}
                                     </option>
@@ -385,6 +415,7 @@ export default function FacultyAttendance({ token }) {
                             <span>Attendance date</span>
                             <input
                                 type="date"
+                                max={getToday()}
                                 value={date}
                                 onChange={event => setDate(event.target.value)}
                                 disabled={saving}

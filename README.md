@@ -31,6 +31,7 @@ Stack: React + Vite + CSS, Node.js + Express, Supabase Auth + PostgreSQL.
 - Run `supabase/migrations/007_atomic_student_approval.sql` to enable transactional Admin approval and student record creation.
 - Review `supabase/migrations/008_academic_management.sql` against the deployed schema and back up the database before applying it manually. It is not applied by the application or build.
 - `006_pending_student_id_correction.sql` is retained as migration history because it may already have been applied. Do not apply it on a new installation. Migration 007 safely removes its obsolete correction RPC if present and leaves any existing profile Student ID uniqueness index intact. Do not delete migration 006 or manually reverse its database changes.
+- Run migrations `009` through `013` in order (faculty module, course-faculty assignments, faculty attendance, course-semester assignments, and the enrollment/faculty-email fix). Migration `013` is required for student course enrollments to save; it is idempotent and preserves existing rows.
 - Create the first Admin account through Supabase Auth, then follow the controlled provisioning instructions in `docs/ADMIN_SETUP.md`.
 - Do not make Admin provisioning publicly accessible.
 
@@ -76,6 +77,8 @@ Frontend default: `http://localhost:5173`
 - Student Management with paginated search, academic filters, generated IDs, editing, and deactivation
 - Admin Academic Management for academic years, semesters, departments, courses, subjects, and semester-specific subject offerings
 - Forward-only academic schema foundation for student-semester enrollment and future faculty-offering assignments
+- Student Courses & Subjects and Attendance views backed by enrollments and submitted attendance sessions
+- Faculty management, course/professor/semester assignments, and attendance sessions with PDF email reports
 - Basic student/faculty/department/course/subject/assignment API foundations
 - Initial PostgreSQL schema and RLS policies
 - Timetable, enrollment, attendance, academic calendar, exam schedule, and announcement records are not currently modeled; corresponding student views remain empty until a reviewed data source is added

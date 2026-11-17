@@ -5994,3 +5994,14 @@ html {
         width: 100%;
     }
 }
+/* Student course cards */
+.student-course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.student-course-grid ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}

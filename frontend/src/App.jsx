@@ -41,6 +41,195 @@ function EmptyPortalPanel({ icon: Icon, title, description, requirement }) {
   );
 }
 
+function semesterName(semester) {
+  if (!semester) return 'Semester';
+
+  const year =
+    semester.academic_year?.label || semester.academic_year?.year_code;
+  const label =
+    semester.label || `Semester ${semester.semester_number || ''}`.trim();
+
+  return year ? `${year} — ${label}` : label;
+}
+
+function StudentCoursesPanel({ record, loading, error }) {
+  const enrollments = (record?.enrollments || []).filter(
+    item => item.status === 'enrolled' && item.course
+  );
+
+  return (
+    <section className="panel student-module-panel">
+      <div className="panel-heading">
+        <div>
+          <h2>Courses &amp; Subjects</h2>
+          <p className="muted">
+            Courses you are enrolled in and their subjects.
+          </p>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="empty-state">
+          <RefreshCw size={24} />
+          <span>Loading your courses…</span>
+        </div>
+      ) : error ? (
+        <div className="alert error">{error}</div>
+      ) : enrollments.length ? (
+        <div className="student-course-grid">
+          {enrollments.map(item => {
+            const subjects = (item.course.subjects || []).filter(
+              subject => subject.status === 'active'
+            );
+
+            return (
+              <article className="panel" key={item.id}>
+                <span className="eyebrow">{item.course.code}</span>
+                <h3>{item.course.name}</h3>
+                <p className="muted">
+                  {item.course.department?.name
+                    ? `${item.course.department.name} · `
+                    : ''}
+                  {semesterName(item.semester)}
+                </p>
+
+                {subjects.length ? (
+                  <ul>
+                    {subjects.map(subject => (
+                      <li key={subject.id}>
+                        <strong>{subject.code}</strong> — {subject.name}
+                        {subject.credits != null
+                          ? ` (${subject.credits} credits)`
+                          : ''}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="muted">No subjects have been added yet.</p>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="empty-state">
+          <BookOpen size={26} />
+          <strong>No course enrollments</strong>
+          <span>
+            An administrator has not enrolled you in a course yet.
+          </span>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function StudentAttendancePanel({ state }) {
+  const { loading, error, summaries, records } = state;
+
+  return (
+    <section className="panel student-module-panel">
+      <div className="panel-heading">
+        <div>
+          <h2>Attendance</h2>
+          <p className="muted">
+            Attendance from sessions your faculty have submitted.
+          </p>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="empty-state">
+          <RefreshCw size={24} />
+          <span>Loading attendance…</span>
+        </div>
+      ) : error ? (
+        <div className="alert error">{error}</div>
+      ) : summaries.length ? (
+        <>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Semester</th>
+                  <th>Sessions</th>
+                  <th>Present</th>
+                  <th>Late</th>
+                  <th>Absent</th>
+                  <th>Attendance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {summaries.map(item => (
+                  <tr key={`${item.course?.id}:${item.semester?.id}`}>
+                    <td>
+                      <strong>{item.course?.name || 'Course'}</strong>
+                      <small className="academic-secondary">
+                        {item.course?.code}
+                      </small>
+                    </td>
+                    <td>{semesterName(item.semester)}</td>
+                    <td>{item.total}</td>
+                    <td>{item.present}</td>
+                    <td>{item.late}</td>
+                    <td>{item.absent}</td>
+                    <td>
+                      <strong>
+                        {item.percentage == null ? '—' : `${item.percentage}%`}
+                      </strong>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Recent sessions</h3>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Course</th>
+                  <th>Topic</th>
+                  <th>Status</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {records.map(item => (
+                  <tr key={item.session_id}>
+                    <td>{item.session_date}</td>
+                    <td>{item.course?.code || item.course?.name || '—'}</td>
+                    <td>{item.topic || '—'}</td>
+                    <td>
+                      <span
+                        className={`status-pill ${item.attendance_status === 'absent' ? 'pending' : 'active-status'}`}
+                      >
+                        {item.attendance_status}
+                      </span>
+                    </td>
+                    <td>{item.remarks || '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      ) : (
+        <div className="empty-state">
+          <ClipboardCheck size={26} />
+          <strong>No attendance recorded yet</strong>
+          <span>
+            Attendance appears here after your faculty submit a session.
+          </span>
+        </div>
+      )}
+    </section>
+  );
+}
+
 function emptyStudentForm() {
   return {
     full_name: '',
@@ -51,7 +240,9 @@ function emptyStudentForm() {
     department_id: '',
     course_id: '',
     admission_year: '',
-    enrollments: []
+    enrollments: [],
+    // Enrollments are only replaced on save once they have loaded successfully.
+    enrollmentsLoaded: true
   };
 }
 
@@ -91,6 +282,12 @@ export default function App() {
   const [phoneError, setPhoneError] = useState('');
   const [phoneMessage, setPhoneMessage] = useState('');
   const [phoneSaving, setPhoneSaving] = useState(false);
+  const [studentAttendance, setStudentAttendance] = useState({
+    loading: false,
+    error: '',
+    summaries: [],
+    records: []
+  });
   const [mode, setMode] = useState('login');
   const [authRole, setAuthRole] = useState('student');
   const [email, setEmail] = useState('');
@@ -145,18 +342,21 @@ export default function App() {
       setSession(session);
     });
 
+    // Token refreshes also fire this listener; keep the loaded profile and the
+    // current page so the user is not bounced back to a loading screen.
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setProfile(null);
+      (_event, nextSession) => {
+        setSession(nextSession);
       }
     );
 
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  const userId = session?.user?.id || null;
+
   useEffect(() => {
-    if (session?.access_token) {
+    if (userId) {
       loadProfile(session.access_token);
     } else {
       setProfile(null);
@@ -164,7 +364,9 @@ export default function App() {
       setStudentRecord(null);
       setStudentRecordError('');
     }
-  }, [session]);
+    // Reload only when a different user signs in, not on token refresh.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   useEffect(() => {
     if (
@@ -203,7 +405,50 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [profile, session?.access_token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.id, profile?.role, profile?.account_status]);
+
+  useEffect(() => {
+    if (
+      view !== 'attendance' ||
+      profile?.role !== 'student' ||
+      profile.account_status !== 'active' ||
+      !session?.access_token
+    ) {
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    setStudentAttendance(current => ({ ...current, loading: true, error: '' }));
+
+    apiRequest('/profile/me/attendance', { token: session.access_token })
+      .then(result => {
+        if (!cancelled) {
+          setStudentAttendance({
+            loading: false,
+            error: '',
+            summaries: result.summaries || [],
+            records: result.records || []
+          });
+        }
+      })
+      .catch(e => {
+        if (!cancelled) {
+          setStudentAttendance({
+            loading: false,
+            error: e.message,
+            summaries: [],
+            records: []
+          });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, profile?.id, profile?.role, profile?.account_status]);
 
   async function loadProfile(token) {
     setProfileLoading(true);
@@ -237,7 +482,7 @@ export default function App() {
 
         const validation = await apiRequest('/registrations/validate', {
           method: 'POST',
-          body: JSON.stringify({ email, full_name: fullName })
+          body: JSON.stringify({ email: email.trim(), full_name: fullName })
         });
 
         if (!validation.valid) {
@@ -245,7 +490,7 @@ export default function App() {
         }
 
         const { data: signupData, error } = await supabase.auth.signUp({
-          email,
+          email: email.trim(),
           password,
           options: {
             data: { full_name: fullName.trim() }
@@ -274,14 +519,12 @@ export default function App() {
         );
         setMode('login');
       } else {
-        const { data: signinData, error } =
-          await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password
+        });
 
         if (error) throw error;
-
-        await apiRequest('/auth/me', {
-  token: signinData.session.access_token
-});
       }
     } catch (e) {
       setError(e.message || 'Authentication failed.');
@@ -520,9 +763,21 @@ export default function App() {
   function updateStudentEnrollment(index, field, value) {
     setStudentForm(current => ({
       ...current,
-      enrollments: current.enrollments.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, [field]: value } : item
-      )
+      enrollments: current.enrollments.map((item, itemIndex) => {
+        if (itemIndex !== index) return item;
+
+        const next = { ...item, [field]: value };
+
+        // A course runs in the semester assigned to it in Academic Management.
+        if (field === 'course_id') {
+          const course = studentOptions.courses.find(
+            option => option.id === value
+          );
+          next.semester_id = course?.semester_id || '';
+        }
+
+        return next;
+      })
     }));
   }
 
@@ -555,7 +810,8 @@ export default function App() {
         department_id: student.department_id || '',
         course_id: student.course_id || '',
         admission_year: student.admission_year ?? '',
-        enrollments: []
+        enrollments: [],
+        enrollmentsLoaded: false
       });
 
       try {
@@ -565,6 +821,7 @@ export default function App() {
 
         setStudentForm(current => ({
           ...current,
+          enrollmentsLoaded: true,
           enrollments: (result.enrollments || [])
             .filter(item => item.status === 'enrolled')
             .map(item => ({
@@ -573,7 +830,9 @@ export default function App() {
             }))
         }));
       } catch (e) {
-        setError(e.message || 'Could not load student enrollments.');
+        setError(
+          `${e.message || 'Could not load student enrollments.'} Existing enrollments will not be changed if you save.`
+        );
       }
     }
 
@@ -722,11 +981,22 @@ export default function App() {
         );
       }
 
-      await apiRequest(`/students/${studentId}/enrollments`, {
-        token: session.access_token,
-        method: 'PUT',
-        body: JSON.stringify({ enrollments: studentForm.enrollments })
-      });
+      let enrollmentWarning = '';
+
+      if (studentForm.enrollmentsLoaded) {
+        try {
+          await apiRequest(`/students/${studentId}/enrollments`, {
+            token: session.access_token,
+            method: 'PUT',
+            body: JSON.stringify({ enrollments: studentForm.enrollments })
+          });
+        } catch (enrollmentError) {
+          // The student already exists; do not leave the form open, or a retry
+          // would try to create a duplicate account.
+          enrollmentWarning =
+            ` However, course enrollments were not saved: ${enrollmentError.message} Edit the student to retry.`;
+        }
+      }
 
       const nextOffset = studentModal === 'add' ? 0 : studentOffset;
 
@@ -734,11 +1004,16 @@ export default function App() {
       setStudentModal(null);
       setStudentForm(emptyStudentForm());
 
-      setMessage(
+      const successText =
         studentModal === 'edit'
           ? 'Student record and login credentials updated successfully.'
-          : 'Student record and login account created. The student can sign in with the supplied email and password.'
-      );
+          : 'Student record and login account created. The student can sign in with the supplied email and password.';
+
+      if (enrollmentWarning) {
+        setError(successText + enrollmentWarning);
+      } else {
+        setMessage(successText);
+      }
 
       await loadStudents({
         offset: nextOffset,
@@ -1379,6 +1654,28 @@ export default function App() {
               Check status
             </button>
           </section>
+        ) : ['rejected', 'inactive'].includes(profile?.account_status) ? (
+          <section className="pending-card">
+            <div className="pending-icon">
+              <CircleAlert size={30} />
+            </div>
+
+            <h2>
+              {profile.account_status === 'rejected'
+                ? 'Registration not approved'
+                : 'Account inactive'}
+            </h2>
+
+            <p>
+              {profile.account_status === 'rejected'
+                ? 'Your registration was not approved. Please contact the university administration if you believe this is a mistake.'
+                : 'Your account is currently inactive. Please contact the university administration to restore access.'}
+            </p>
+
+            <button className="secondary-button" onClick={signOut}>
+              Sign out
+            </button>
+          </section>
         ) : !profile ? (
           <section className="panel">
             <p>
@@ -1916,8 +2213,15 @@ export default function App() {
                     <strong>{studentRecord.department?.name || '—'}</strong>
                   </div>
                   <div className="profile-field">
-                    <span>Course</span>
-                    <strong>{studentRecord.course?.name || '—'}</strong>
+                    <span>Course enrollments</span>
+                    <strong>
+                      {(studentRecord.enrollments || [])
+                        .filter(item => item.status === 'enrolled' && item.course)
+                        .map(item => `${item.course.name} — ${semesterName(item.semester)}`)
+                        .join(', ') ||
+                        studentRecord.course?.name ||
+                        '—'}
+                    </strong>
                   </div>
                   <div className="profile-field">
                     <span>Admission year</span>
@@ -1963,11 +2267,10 @@ export default function App() {
             )}
           </section>
         ) : view === 'courses' && isActiveStudent ? (
-          <EmptyPortalPanel
-            icon={BookOpen}
-            title="Courses & Subjects"
-            description="Review your course and subject information."
-            requirement="Course information will appear here when it is configured for your student record."
+          <StudentCoursesPanel
+            record={studentRecord}
+            loading={studentRecordLoading}
+            error={studentRecordError}
           />
         ) : view === 'timetable' && isActiveStudent ? (
           <EmptyPortalPanel
@@ -1977,12 +2280,7 @@ export default function App() {
             requirement="Your timetable will appear here when timetable data is configured."
           />
         ) : view === 'attendance' && isActiveStudent ? (
-          <EmptyPortalPanel
-            icon={ClipboardCheck}
-            title="Attendance"
-            description="Review your attendance information."
-            requirement="Attendance records will appear here when attendance data is available."
-          />
+          <StudentAttendancePanel state={studentAttendance} />
         ) : view === 'calendar' && isActiveStudent ? (
           <EmptyPortalPanel
             icon={CalendarDays}
@@ -2500,7 +2798,16 @@ export default function App() {
                             required
                           >
                             <option value="">Select semester</option>
-                            {studentOptions.semesters.map(semester => {
+                            {studentOptions.semesters
+                              .filter(semester => {
+                                const course = studentOptions.courses.find(
+                                  option => option.id === item.course_id
+                                );
+
+                                return !course?.semester_id ||
+                                  course.semester_id === semester.id;
+                              })
+                              .map(semester => {
                               const year =
                                 semester.academic_year?.label ||
                                 semester.academic_year?.year_code;
