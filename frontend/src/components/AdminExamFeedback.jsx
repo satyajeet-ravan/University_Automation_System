@@ -71,22 +71,35 @@ export default function AdminExamFeedback({ token }) {
     setLoading(true);
     setError('');
 
-    try {
-      const [roundResult, optionResult] = await Promise.all([
-        apiRequest('/exam-feedback/admin/rounds', { token }),
-        apiRequest('/exam-feedback/admin/options', { token })
-      ]);
+    // Branches and semesters do not depend on the feedback tables, so the form
+    // keeps working even if the rounds themselves cannot be loaded yet.
+    const [roundResult, optionResult] = await Promise.allSettled([
+      apiRequest('/exam-feedback/admin/rounds', { token }),
+      apiRequest('/exam-feedback/admin/options', { token })
+    ]);
 
-      setRounds(roundResult.rounds || []);
+    if (optionResult.status === 'fulfilled') {
       setOptions({
-        programs: optionResult.programs || [],
-        semesters: optionResult.semesters || []
+        programs: optionResult.value.programs || [],
+        semesters: optionResult.value.semesters || []
       });
-    } catch (e) {
-      setError(e.message || 'Could not load feedback rounds.');
-    } finally {
-      setLoading(false);
     }
+
+    if (roundResult.status === 'fulfilled') {
+      setRounds(roundResult.value.rounds || []);
+    } else {
+      setRounds([]);
+    }
+
+    const failure = [roundResult, optionResult].find(
+      item => item.status === 'rejected'
+    );
+
+    if (failure) {
+      setError(failure.reason?.message || 'Could not load feedback rounds.');
+    }
+
+    setLoading(false);
   }, [token]);
 
   useEffect(() => {
@@ -479,7 +492,7 @@ export default function AdminExamFeedback({ token }) {
           }}
         >
           <section
-            className="admin-modal exam-modal"
+            className="admin-modal student-modal exam-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="exam-modal-title"
@@ -699,7 +712,7 @@ export default function AdminExamFeedback({ token }) {
           }}
         >
           <section
-            className="admin-modal exam-modal"
+            className="admin-modal student-modal exam-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="exam-results-title"
