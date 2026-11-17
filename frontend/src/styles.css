@@ -1993,7 +1993,7 @@ select:focus-visible {
 
 
 /* ==========================================
-   CAMPUSFLOW — GLOBAL READABILITY UPGRADE
+   Global readability
    Add this at the very bottom of styles.css
    ========================================== */
 
@@ -4923,7 +4923,7 @@ td {
 }
 
 /* =========================================
-   STUDENT MODAL — LAYOUT REPAIR
+   Student modal layout
 ========================================= */
 
 .modal-backdrop {
@@ -5329,7 +5329,7 @@ td {
 
 
 /* =========================================================
-   CAMPUSFLOW — DASHBOARD LAYOUT FIX (MATCHES CURRENT App.jsx)
+   Dashboard layout
    ========================================================= */
 
 .dashboard-content,
