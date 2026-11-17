@@ -121,7 +121,6 @@ export default function FacultyDashboard({ token }) {
 
   return (
     <section className="faculty-dashboard">
-      {/* Faculty welcome section */}
       <section className="faculty-hero">
         <div className="faculty-hero-copy">
           <span className="faculty-eyebrow">FACULTY WORKSPACE</span>
@@ -153,12 +152,11 @@ export default function FacultyDashboard({ token }) {
         </div>
       </section>
 
-      {/* Overview cards */}
       <section className="faculty-overview-grid">
         <SummaryCard
           icon={UserRound}
           label="Faculty ID"
-          value={faculty.faculty_code || '—'}
+          value={faculty.faculty_code || '-'}
           description={faculty.designation || 'Faculty member'}
           tone="blue"
         />
@@ -180,7 +178,6 @@ export default function FacultyDashboard({ token }) {
         />
       </section>
 
-      {/* Faculty profile */}
       <section className="panel faculty-profile-panel">
         <div className="faculty-section-heading">
           <div className="faculty-section-title">
@@ -239,7 +236,6 @@ export default function FacultyDashboard({ token }) {
         </div>
       </section>
 
-      {/* Assigned courses */}
       <section className="panel faculty-subject-panel">
         <div className="faculty-section-heading">
           <div className="faculty-section-title">
@@ -365,7 +361,6 @@ export default function FacultyDashboard({ token }) {
         )}
       </section>
 
-      {/* NEW: Faculty attendance management */}
       <section className="faculty-attendance-section">
         <div className="faculty-section-heading">
           <div className="faculty-section-title">
