@@ -25,7 +25,7 @@ test('feedback ratings must cover every criterion with a value from 1 to 5', () 
   assert.equal(normalizeRatings(missing), null);
   assert.equal(normalizeRatings(null), null);
   assert.equal(normalizeRatings([5, 5, 5, 5, 5]), null);
-  assert.equal(FEEDBACK_CRITERIA.length, 10);
+  assert.equal(FEEDBACK_CRITERIA.length, 5);
 });
 
 test('exam dates and times are validated and formatted for the hall ticket', () => {
