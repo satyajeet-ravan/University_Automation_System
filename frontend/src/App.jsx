@@ -3,13 +3,15 @@ import {
   BookOpen, GraduationCap, LayoutDashboard, LogOut, ShieldCheck,
   Users, UserRound, RefreshCw, CircleAlert, CheckCircle2, Clock3, Shield,
   UserPlus, X, Search, Eye, Pencil, UserRoundPlus, ChevronLeft, ChevronRight,
-  CalendarDays, ClipboardCheck, Building2, Sun, Moon, Wallet
+  CalendarDays, ClipboardCheck, Building2, Sun, Moon, Wallet, MessageSquare
 } from 'lucide-react';
 import { supabase, supabaseConfigured } from './lib/supabase';
 import { apiRequest } from './lib/api';
 import AdminAcademicManagement from './components/AdminAcademicManagement';
 import FacultyDashboard from './components/FacultyDashboard';
 import FacultyManagement from './components/FacultyManagement';
+import AdminExamFeedback from './components/AdminExamFeedback';
+import StudentFeedback from './components/StudentFeedback';
 
 function Brand() {
   return (
@@ -1634,6 +1636,8 @@ export default function App() {
     attendance: 'Attendance',
     calendar: 'Academic Calendar',
     fees: 'Fees',
+    feedback: 'Faculty Feedback',
+    examFeedback: 'Exam and Feedback',
     registrations: 'Student verification',
     students: 'Student Management',
     facultyManagement: 'Faculty Management',
@@ -1689,6 +1693,14 @@ export default function App() {
               onClick={() => setView('attendance')}
             >
               <ClipboardCheck size={18} /> Attendance
+            </button>
+
+            <button
+              className={`nav-item ${view === 'feedback' ? 'active' : ''}`}
+              aria-current={view === 'feedback' ? 'page' : undefined}
+              onClick={() => setView('feedback')}
+            >
+              <MessageSquare size={18} /> Feedback
             </button>
 
             <button
@@ -1777,6 +1789,20 @@ export default function App() {
                 }}
               >
                 <Building2 size={18} /> Academic Management
+              </button>
+            )}
+
+            {isAdmin && (
+              <button
+                className={`nav-item ${view === 'examFeedback' ? 'active' : ''}`}
+                aria-current={view === 'examFeedback' ? 'page' : undefined}
+                onClick={() => {
+                  setView('examFeedback');
+                  setError('');
+                  setMessage('');
+                }}
+              >
+                <MessageSquare size={18} /> Exam and Feedback
               </button>
             )}
 
@@ -2335,6 +2361,10 @@ export default function App() {
               </div>
             </div>
           </section>
+        ) : view === 'examFeedback' && isAdmin ? (
+          <AdminExamFeedback token={session.access_token} />
+        ) : view === 'feedback' && isActiveStudent ? (
+          <StudentFeedback token={session.access_token} />
         ) : view === 'academic' && isAdmin ? (
           <AdminAcademicManagement token={session.access_token} />
         ) : view === 'faculty' && isFaculty ? (
