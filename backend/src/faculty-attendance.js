@@ -1,5 +1,6 @@
-
 import { Router } from 'express';
+import PDFDocument from 'pdfkit';
+import nodemailer from 'nodemailer';
 import { requireAuth, requireFaculty } from './middleware/auth.js';
 
 const UUID_PATTERN =
@@ -7,6 +8,24 @@ const UUID_PATTERN =
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const ATTENDANCE_STATUSES = new Set(['present', 'absent', 'late']);
+
+function createMailTransporter() {
+    const { SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS } = process.env;
+
+    if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
+        return null;
+    }
+
+    return nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: Number(SMTP_PORT || 587),
+        secure: String(SMTP_SECURE || 'false').toLowerCase() === 'true',
+        auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASS
+        }
+    });
+}
 
 function validDate(value) {
     if (typeof value !== 'string' || !DATE_PATTERN.test(value)) return false;
@@ -25,6 +44,113 @@ function cleanText(value, maxLength = 500) {
 function sendDbError(res, label, error) {
     console.error(`[attendance] ${label}:`, error?.code || error?.message || 'unknown error');
     return res.status(500).json({ error: `Could not ${label}.` });
+}
+
+function generateAttendancePdf({ session, facultyEmail, records }) {
+    return new Promise((resolve, reject) => {
+        try {
+            const doc = new PDFDocument({ size: 'A4', margin: 40, bufferPages: true });
+            const chunks = [];
+
+            doc.on('data', chunk => chunks.push(chunk));
+            doc.on('end', () => resolve(Buffer.concat(chunks)));
+            doc.on('error', reject);
+
+            doc.font('Helvetica-Bold').fontSize(20)
+                .text('Attendance Report', { align: 'center' });
+            doc.moveDown();
+
+            doc.font('Helvetica-Bold').fontSize(11).text('Course Information');
+            doc.font('Helvetica').fontSize(9)
+                .text(`Course: ${session.course?.name || 'N/A'}`)
+                .text(`Course Code: ${session.course?.code || 'N/A'}`)
+                .text(`Semester: ${session.semester?.name || session.semester?.label || 'N/A'}`)
+                .text(`Date: ${session.session_date || 'N/A'}`)
+                .text(`Faculty Email: ${facultyEmail || 'N/A'}`);
+            if (session.topic) doc.text(`Topic: ${session.topic}`);
+            if (session.notes) doc.text(`Notes: ${session.notes}`);
+            doc.moveDown();
+
+            const counts = {
+                present: records.filter(r => r.attendance_status === 'present').length,
+                absent: records.filter(r => r.attendance_status === 'absent').length,
+                late: records.filter(r => r.attendance_status === 'late').length
+            };
+
+            doc.font('Helvetica-Bold').fontSize(11).text('Attendance Summary');
+            doc.font('Helvetica').fontSize(9)
+                .text(`Total Students: ${records.length}`)
+                .text(`Present: ${counts.present}`)
+                .text(`Absent: ${counts.absent}`)
+                .text(`Late: ${counts.late}`);
+            doc.moveDown();
+
+            doc.font('Helvetica-Bold').fontSize(11).text('Student Attendance');
+            doc.moveDown(0.5);
+
+            const x = { no: 40, code: 65, name: 145, email: 285, status: 455 };
+            const drawHeader = () => {
+                const y = doc.y;
+                doc.font('Helvetica-Bold').fontSize(7.5);
+                doc.text('#', x.no, y, { width: 20 });
+                doc.text('Student ID', x.code, y, { width: 75 });
+                doc.text('Name', x.name, y, { width: 135 });
+                doc.text('Email', x.email, y, { width: 165 });
+                doc.text('Status', x.status, y, { width: 100 });
+                doc.moveDown(0.8);
+                doc.moveTo(40, doc.y).lineTo(555, doc.y).stroke();
+                doc.moveDown(0.4);
+            };
+
+            drawHeader();
+            records.forEach((record, index) => {
+                const rowHeight = record.remarks ? 28 : 18;
+                if (doc.y + rowHeight > 755) {
+                    doc.addPage();
+                    doc.font('Helvetica-Bold').fontSize(11)
+                        .text('Student Attendance — Continued');
+                    doc.moveDown(0.5);
+                    drawHeader();
+                }
+
+                const y = doc.y;
+                doc.font('Helvetica').fontSize(7);
+                doc.text(String(index + 1), x.no, y, { width: 20 });
+                doc.text(String(record.student_code || '—'), x.code, y, { width: 75 });
+                doc.text(String(record.full_name || '—'), x.name, y, { width: 135 });
+                doc.text(String(record.email || '—'), x.email, y, { width: 165 });
+                doc.text(String(record.attendance_status || '—').toUpperCase(), x.status, y, { width: 90 });
+                doc.moveDown(1);
+
+                if (record.remarks) {
+                    doc.font('Helvetica-Oblique').fontSize(6.5)
+                        .text(`Remarks: ${String(record.remarks)}`, x.name, doc.y, { width: 350 });
+                    doc.moveDown(0.5);
+                }
+                doc.moveTo(40, doc.y).lineTo(555, doc.y).stroke();
+                doc.moveDown(0.4);
+            });
+
+            doc.moveDown();
+            doc.font('Helvetica').fontSize(8)
+                .text(`Generated on: ${new Date().toLocaleString()}`, { align: 'right' });
+
+            const range = doc.bufferedPageRange();
+            for (let i = range.start; i < range.start + range.count; i += 1) {
+                doc.switchToPage(i);
+                doc.font('Helvetica').fontSize(8)
+                    .text(`Page ${i + 1} of ${range.count}`, 40, 770, {
+                        width: 515,
+                        align: 'center',
+                        lineBreak: false
+                    });
+            }
+
+            doc.end();
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
 
 export function createFacultyAttendanceRouter(supabaseAdmin) {
@@ -52,7 +178,7 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
         id, course_id, semester_id, faculty_id, session_date,
         topic, notes, status, submitted_at, created_at, updated_at,
         course:courses(id, name, code),
-        semester:semesters(id, name, status)
+        semester:semesters(id, label, semester_number, status)
       `)
             .eq('id', sessionId)
             .eq('faculty_id', facultyId)
@@ -129,8 +255,7 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                     error: 'Could not load course semester assignments.'
                 });
             }
-
-            const semesterByCourse = new Map(
+                        const semesterByCourse = new Map(
                 (semesterAssignments || [])
                     .filter(item => item.semester?.status === 'active')
                     .map(item => [
@@ -159,9 +284,7 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
         }
     });
 
-
     // Active semesters available for attendance.
-
     router.get('/semesters', async (_req, res) => {
         try {
             const { data, error } = await supabaseAdmin
@@ -197,8 +320,6 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
             });
         }
     });
-
-
 
     // List sessions for one assigned course and semester.
     router.get('/sessions', async (req, res) => {
@@ -372,17 +493,17 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                 });
             }
 
-            // A unique course/semester/date constraint allows one session per course per day.
+            // One session is allowed per course, semester, and date.
             const { data: existing, error: existingError } = await supabaseAdmin
                 .from('attendance_sessions')
-                .select('id, status')
+                .select('id, status, faculty_id')
                 .eq('course_id', courseId)
                 .eq('semester_id', semesterId)
                 .eq('session_date', sessionDate)
                 .maybeSingle();
 
             if (existingError) return sendDbError(res, 'check attendance session', existingError);
-            if (existing && existing.faculty_id && existing.faculty_id !== req.faculty.id) {
+            if (existing?.faculty_id && existing.faculty_id !== req.faculty.id) {
                 return res.status(403).json({ error: 'This session belongs to another faculty member.' });
             }
             if (existing?.status === 'submitted') {
@@ -390,14 +511,10 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
             }
 
             let session;
-            if (existing) {
+                        if (existing) {
                 const { data, error } = await supabaseAdmin
                     .from('attendance_sessions')
-                    .update({
-                        topic,
-                        notes,
-                        updated_at: new Date().toISOString()
-                    })
+                    .update({ topic, notes, updated_at: new Date().toISOString() })
                     .eq('id', existing.id)
                     .eq('faculty_id', req.faculty.id)
                     .select('*')
@@ -447,17 +564,16 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                 const { error } = await supabaseAdmin
                     .from('attendance_records')
                     .upsert(rows, { onConflict: 'session_id,student_id' });
-
                 if (error) return sendDbError(res, 'save attendance records', error);
             }
 
-            res.json({ message: 'Attendance saved successfully.', session });
+            return res.json({ message: 'Attendance saved successfully.', session });
         } catch (error) {
             return sendDbError(res, 'save attendance', error);
         }
     });
 
-    // Submit a saved session. It becomes read-only until reopened.
+    // Submit a saved session, generate its PDF report, and email it to the faculty member.
     router.post('/sessions/:id/submit', async (req, res) => {
         if (!UUID_PATTERN.test(req.params.id)) {
             return res.status(400).json({ error: 'Invalid attendance session ID.' });
@@ -465,9 +581,11 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
 
         try {
             const session = await getSession(req.params.id, req.faculty.id);
-            if (!session) return res.status(404).json({ error: 'Attendance session not found.' });
+            if (!session) {
+                return res.status(404).json({ error: 'Attendance session not found.' });
+            }
             if (session.status === 'submitted') {
-                return res.json({ message: 'Attendance was already submitted.', session });
+                return res.json({ message: 'Attendance was already submitted.', session, emailSent: false });
             }
 
             const { data: enrollments, error: enrollmentError } = await supabaseAdmin
@@ -476,41 +594,140 @@ export function createFacultyAttendanceRouter(supabaseAdmin) {
                 .eq('course_id', session.course_id)
                 .eq('semester_id', session.semester_id)
                 .eq('status', 'enrolled');
-
-            if (enrollmentError) return sendDbError(res, 'validate enrolled students', enrollmentError);
+            if (enrollmentError) {
+                return sendDbError(res, 'validate enrolled students', enrollmentError);
+            }
 
             const enrolledIds = new Set((enrollments || []).map(row => row.student_id));
             const { data: records, error: recordsError } = await supabaseAdmin
                 .from('attendance_records')
-                .select('student_id')
+                .select('student_id, attendance_status, remarks')
                 .eq('session_id', session.id);
-
-            if (recordsError) return sendDbError(res, 'validate attendance records', recordsError);
+            if (recordsError) {
+                return sendDbError(res, 'load attendance records', recordsError);
+            }
 
             const markedIds = new Set((records || []).map(row => row.student_id));
             const missing = [...enrolledIds].filter(id => !markedIds.has(id));
-
             if (missing.length) {
                 return res.status(400).json({
                     error: `Mark attendance for all enrolled students before submitting. ${missing.length} student(s) remain unmarked.`
                 });
             }
 
-            const { data, error } = await supabaseAdmin
+            const studentIds = [...enrolledIds];
+            const studentsResult = studentIds.length
+                ? await supabaseAdmin
+                    .from('students')
+                    .select('id, student_code, full_name, email')
+                    .in('id', studentIds)
+                : { data: [], error: null };
+
+            if (studentsResult.error) {
+                return sendDbError(res, 'load students for attendance report', studentsResult.error);
+            }
+
+            const studentMap = new Map((studentsResult.data || []).map(student => [student.id, student]));
+            const reportRecords = (records || [])
+                .filter(record => enrolledIds.has(record.student_id))
+                .map(record => ({
+                    ...record,
+                    ...(studentMap.get(record.student_id) || {})
+                }))
+                .sort((a, b) => String(a.full_name || '').localeCompare(String(b.full_name || '')));
+
+            const submittedAt = new Date().toISOString();
+            const { data: updatedSession, error: updateError } = await supabaseAdmin
                 .from('attendance_sessions')
                 .update({
                     status: 'submitted',
-                    submitted_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
+                    submitted_at: submittedAt,
+                    updated_at: submittedAt
                 })
                 .eq('id', session.id)
                 .eq('faculty_id', req.faculty.id)
                 .select('*')
                 .single();
 
-            if (error) return sendDbError(res, 'submit attendance', error);
-            res.json({ message: 'Attendance submitted successfully.', session: data });
+            if (updateError) return sendDbError(res, 'submit attendance', updateError);
+
+            // Keep the joined course/semester details from getSession for the PDF.
+            const submittedSession = { ...session, ...updatedSession };
+            const facultyEmail = req.user?.email || req.faculty?.email || null;
+
+            let pdfBuffer;
+            try {
+                pdfBuffer = await generateAttendancePdf({
+                    session: submittedSession,
+                    facultyEmail,
+                    records: reportRecords
+                });
+            } catch (pdfError) {
+                console.error('[attendance] PDF generation failed:', pdfError?.message || pdfError);
+                return res.json({
+                    message: 'Attendance submitted successfully, but the PDF report could not be generated.',
+                    session: submittedSession,
+                    emailSent: false,
+                    pdfGenerated: false
+                });
+            }
+
+            if (!facultyEmail) {
+                console.error('[attendance] Faculty email unavailable on authenticated request.');
+                return res.json({
+                    message: 'Attendance submitted and PDF generated, but the faculty email address was unavailable, so the report could not be emailed.',
+                    session: submittedSession,
+                    emailSent: false,
+                    pdfGenerated: true
+                });
+            }
+
+            const transporter = createMailTransporter();
+            if (!transporter || !process.env.SMTP_FROM && !process.env.SMTP_USER) {
+                console.error('[attendance] SMTP configuration is incomplete.');
+                return res.json({
+                    message: 'Attendance submitted and PDF generated, but email could not be sent because SMTP is not configured.',
+                    session: submittedSession,
+                    emailSent: false,
+                    pdfGenerated: true
+                });
+            }
+
+            try {
+                await transporter.sendMail({
+                    from: process.env.SMTP_FROM || process.env.SMTP_USER,
+                    to: facultyEmail,
+                    subject: `Attendance Report - ${submittedSession.course?.code || 'Course'} - ${submittedSession.session_date}`,
+                    text:
+                        `Dear Faculty,\n\n` +
+                        `Your attendance for ${submittedSession.course?.name || 'the course'} ` +
+                        `on ${submittedSession.session_date} has been successfully submitted.\n\n` +
+                        `The attendance report is attached as a PDF.\n\n` +
+                        `University Automation System`,
+                    attachments: [{
+                        filename: `attendance-${submittedSession.course?.code || 'course'}-${submittedSession.session_date}.pdf`,
+                        content: pdfBuffer,
+                        contentType: 'application/pdf'
+                    }]
+                });
+
+                return res.json({
+                    message: 'Attendance submitted successfully. PDF report has been sent to your email.',
+                    session: submittedSession,
+                    emailSent: true,
+                    pdfGenerated: true
+                });
+            } catch (emailError) {
+                console.error('[attendance] Failed to send attendance email:', emailError?.message || emailError);
+                return res.json({
+                    message: 'Attendance submitted and PDF generated, but the email could not be sent. Check the backend SMTP configuration.',
+                    session: submittedSession,
+                    emailSent: false,
+                    pdfGenerated: true
+                });
+            }
         } catch (error) {
+            console.error('[attendance] Submit attendance failed:', error?.message || error);
             return sendDbError(res, 'submit attendance', error);
         }
     });

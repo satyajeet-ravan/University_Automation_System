@@ -279,17 +279,9 @@ export default function App() {
 
         if (error) throw error;
 
-        const account = await apiRequest('/auth/me', {
-          token: signinData.session.access_token
-        });
-
-        if (account.profile.role !== authRole) {
-          await supabase.auth.signOut();
-
-          throw new Error(
-            `This account is registered as ${account.profile.role}. Select the matching sign-in option.`
-          );
-        }
+        await apiRequest('/auth/me', {
+  token: signinData.session.access_token
+});
       }
     } catch (e) {
       setError(e.message || 'Authentication failed.');
@@ -973,40 +965,41 @@ export default function App() {
                 : `${authRole.toUpperCase()} REGISTRATION`}
             </span>
 
-            <h2>
-              {mode === 'login'
-                ? `Sign in as ${authRole}`
-                : authRole === 'student'
-                  ? 'Create a student account'
-                  : `Create a ${authRole} account`}
-            </h2>
+           <h2>
+  {mode === 'login'
+    ? 'Sign in'
+    : authRole === 'student'
+      ? 'Create a student account'
+      : `Create a ${authRole} account`}
+</h2>
 
-            <div
-              className="auth-role-selector"
-              role="group"
-              aria-label="Account type"
-            >
-              {['student', 'admin', 'faculty'].map(role => (
-                <button
-                  key={role}
-                  type="button"
-                  className={authRole === role ? 'active' : ''}
-                  onClick={() => {
-                    setAuthRole(role);
-                    setMode('login');
-                    setError('');
-                    setMessage('');
-                    setSignupFieldErrors({});
-                  }}
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
+           {mode === 'signup' && (
+  <div
+    className="auth-role-selector"
+    role="group"
+    aria-label="Account type"
+  >
+    {['student', 'admin', 'faculty'].map(role => (
+      <button
+        key={role}
+        type="button"
+        className={authRole === role ? 'active' : ''}
+        onClick={() => {
+          setAuthRole(role);
+          setError('');
+          setMessage('');
+          setSignupFieldErrors({});
+        }}
+      >
+        {role}
+      </button>
+    ))}
+  </div>
+)}
 
             <p className="muted">
-              {mode === 'login'
-                ? `Enter your ${authRole} credentials to continue.`
+             {mode === 'login'
+  ? 'Enter your email and password to continue.'
                 : authRole === 'student'
                   ? 'Registration remains pending until an Admin reviews and approves it. Your Student ID is created on approval.'
                   : `${authRole === 'admin' ? 'Admin' : 'Faculty'} accounts are created by an active Admin to protect university access.`}
@@ -1089,10 +1082,10 @@ export default function App() {
             ) : (
               <button className="primary-button" disabled={busy}>
                 {busy
-                  ? 'Please wait…'
-                  : mode === 'login'
-                    ? `Sign in as ${authRole}`
-                    : 'Create student account'}
+  ? 'Please wait…'
+  : mode === 'login'
+    ? 'Sign in'
+    : 'Create student account'}
               </button>
             )}
 
