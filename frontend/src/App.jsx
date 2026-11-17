@@ -178,7 +178,7 @@ function StudentAttendancePanel({ state }) {
         <div>
           <h2>Attendance</h2>
           <p className="muted">
-            Attendance from sessions your faculty have submitted.
+            Attendance per subject, as recorded by your faculty.
           </p>
         </div>
       </div>
@@ -196,12 +196,13 @@ function StudentAttendancePanel({ state }) {
             <table>
               <thead>
                 <tr>
-                  <th>Course</th>
+                  <th>Subject</th>
                   <th>Semester</th>
                   <th>Sessions</th>
                   <th>Present</th>
                   <th>Late</th>
                   <th>Absent</th>
+                  <th>Last session</th>
                   <th>Attendance</th>
                 </tr>
               </thead>
@@ -219,6 +220,7 @@ function StudentAttendancePanel({ state }) {
                     <td>{item.present}</td>
                     <td>{item.late}</td>
                     <td>{item.absent}</td>
+                    <td>{item.last_date || '-'}</td>
                     <td>
                       <strong>
                         {item.percentage == null ? '-' : `${item.percentage}%`}
@@ -236,9 +238,10 @@ function StudentAttendancePanel({ state }) {
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Course</th>
+                  <th>Subject</th>
                   <th>Topic</th>
-                  <th>Status</th>
+                  <th>Attendance</th>
+                  <th>Session</th>
                   <th>Remarks</th>
                 </tr>
               </thead>
@@ -246,7 +249,7 @@ function StudentAttendancePanel({ state }) {
                 {records.map(item => (
                   <tr key={item.session_id}>
                     <td>{item.session_date}</td>
-                    <td>{item.course?.code || item.course?.name || '-'}</td>
+                    <td>{item.course?.name || item.course?.code || '-'}</td>
                     <td>{item.topic || '-'}</td>
                     <td>
                       <span
@@ -254,6 +257,9 @@ function StudentAttendancePanel({ state }) {
                       >
                         {item.attendance_status}
                       </span>
+                    </td>
+                    <td>
+                      {item.session_status === 'submitted' ? 'Submitted' : 'Saved'}
                     </td>
                     <td>{item.remarks || '-'}</td>
                   </tr>
@@ -265,9 +271,9 @@ function StudentAttendancePanel({ state }) {
       ) : (
         <div className="empty-state">
           <ClipboardCheck size={26} />
-          <strong>No attendance recorded yet</strong>
+          <strong>No subjects yet</strong>
           <span>
-            Attendance appears here after your faculty submit a session.
+            Subjects appear here once you are enrolled in a course.
           </span>
         </div>
       )}
