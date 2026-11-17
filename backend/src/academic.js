@@ -561,6 +561,13 @@ async function syncCourseFaculty(db, courseId, facultyIds) {
 async function syncCourseSemester(db, courseId, semesterId) {
   if (semesterId === undefined) return { error: null };
 
+  const { data: previous } = await db
+    .from('course_semester_assignments')
+    .select('semester_id')
+    .eq('course_id', courseId)
+    .eq('status', 'active')
+    .neq('semester_id', semesterId);
+
   const { error } = await db
     .from('course_semester_assignments')
     .upsert(
@@ -582,6 +589,21 @@ async function syncCourseSemester(db, courseId, semesterId) {
     .eq('course_id', courseId)
     .neq('semester_id', semesterId)
     .eq('status', 'active');
+
+  if (!deactivateError && previous?.length) {
+    // Students enrolled for the old semester would otherwise vanish from the
+    // attendance roster, which follows the course's current semester.
+    const { error: moveError } = await db
+      .from('student_semester_enrollments')
+      .update({ semester_id: semesterId, updated_at: new Date().toISOString() })
+      .eq('course_id', courseId)
+      .eq('status', 'enrolled')
+      .in('semester_id', previous.map(item => item.semester_id));
+
+    if (moveError) {
+      console.error('[academic] Could not move enrollments to the new semester:', moveError.message);
+    }
+  }
 
   return { error: deactivateError || null };
 }
