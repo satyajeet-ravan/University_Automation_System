@@ -1,4 +1,4 @@
-# University Automation System — Starter Project
+# University Automation System - Project
 
 Stack: React + Vite + CSS, Node.js + Express, Supabase Auth + PostgreSQL.
 
@@ -15,7 +15,7 @@ Stack: React + Vite + CSS, Node.js + Express, Supabase Auth + PostgreSQL.
 
 ## 1. Configure Supabase
 1. Create a Supabase project.
-2. Open **Project Settings → API** (or API Keys, depending on dashboard version).
+2. Open **Project Settings > API** (or API Keys, depending on dashboard version).
 3. Copy the Project URL and publishable/anon key for the frontend.
 4. Copy the service-role/secret key for the backend only. Keep it private.
 5. In Supabase Auth settings, configure the allowed site URL and redirect URLs for your local frontend (usually `http://localhost:5173`).
