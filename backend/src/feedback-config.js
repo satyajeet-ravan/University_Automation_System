@@ -1,10 +1,15 @@
 // What students rate, and the five answers they can give for each item.
 export const FEEDBACK_CRITERIA = [
-  { key: 'communication', label: 'Communication' },
-  { key: 'knowledge', label: 'Subject knowledge' },
-  { key: 'teaching', label: 'Teaching skills' },
-  { key: 'punctuality', label: 'Punctuality and regularity' },
-  { key: 'interaction', label: 'Interaction and doubt solving' }
+  { key: 'q1', label: 'Has the Teacher covered the entire syllabus as prescribed by the University?' },
+  { key: 'q2', label: 'Has the Teacher covered relevant topics beyond the syllabus?' },
+  { key: 'q3', label: 'Motivation and inspiration for students to learn' },
+  { key: 'q4', label: 'Clarity on expectations of students' },
+  { key: 'q5', label: "Feedback provided on students' progress" },
+  { key: 'q6', label: 'Willingness to offer help and advice to students' },
+  { key: 'q7', label: 'Effectiveness of the Teacher in terms of technical content and course content' },
+  { key: 'q8', label: 'Effectiveness of the Teacher in terms of communication skills' },
+  { key: 'q9', label: 'Effectiveness of the Teacher in terms of use of teaching aids' },
+  { key: 'q10', label: "Support for the development of students' skills (practical demonstration)" }
 ];
 
 export const FEEDBACK_LEVELS = [

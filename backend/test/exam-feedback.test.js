@@ -15,16 +15,17 @@ test('feedback ratings must cover every criterion with a value from 1 to 5', () 
   const full = Object.fromEntries(FEEDBACK_CRITERIA.map(item => [item.key, 4]));
 
   assert.deepEqual(normalizeRatings(full), full);
-  assert.equal(normalizeRatings({ ...full, communication: 0 }), null);
-  assert.equal(normalizeRatings({ ...full, communication: 6 }), null);
-  assert.equal(normalizeRatings({ ...full, communication: 2.5 }), null);
-  assert.equal(normalizeRatings({ ...full, communication: 'abc' }), null);
+  assert.equal(normalizeRatings({ ...full, q1: 0 }), null);
+  assert.equal(normalizeRatings({ ...full, q1: 6 }), null);
+  assert.equal(normalizeRatings({ ...full, q1: 2.5 }), null);
+  assert.equal(normalizeRatings({ ...full, q1: 'abc' }), null);
 
   const missing = { ...full };
-  delete missing.knowledge;
+  delete missing.q2;
   assert.equal(normalizeRatings(missing), null);
   assert.equal(normalizeRatings(null), null);
   assert.equal(normalizeRatings([5, 5, 5, 5, 5]), null);
+  assert.equal(FEEDBACK_CRITERIA.length, 10);
 });
 
 test('exam dates and times are validated and formatted for the hall ticket', () => {
