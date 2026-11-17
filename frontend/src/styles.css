@@ -4593,7 +4593,7 @@ td {
 .student-enrollments-editor {
     margin: 20px 0;
     padding: 16px;
-    border: 1px solid var(--border, #26364d);
+    border: 1px solid var(--line);
     border-radius: 12px;
 }
 
@@ -4625,8 +4625,9 @@ td {
     padding: 5px 8px;
     border-radius: 8px;
     font-size: 0.8rem;
-    background: var(--surface-secondary, #1b2940);
-    border: 1px solid var(--border, #26364d);
+    color: var(--text);
+    background: var(--subtle);
+    border: 1px solid var(--line);
 }
 
 @media (max-width: 720px) {
