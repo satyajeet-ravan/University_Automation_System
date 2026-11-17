@@ -6064,3 +6064,29 @@ html {
 .student-course-details li {
   margin-bottom: 4px;
 }
+
+/* Student profile */
+.enrollment-table-block {
+  margin-top: 24px;
+}
+
+.enrollment-table-block h3 {
+  margin: 0 0 12px;
+}
+
+.profile-edit-form {
+  display: grid;
+  gap: 10px;
+  max-width: 360px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.profile-edit-form input {
+  width: 100%;
+}
+
+.profile-edit-form .primary-button {
+  justify-self: start;
+}
