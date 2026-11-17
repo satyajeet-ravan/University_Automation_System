@@ -94,7 +94,7 @@ export default function FacultyManagement({ token }) {
         }
 
         if (form.password.length < 8 || form.password.length > 128) {
-            errors.password = 'Password must contain 8–128 characters.';
+            errors.password = 'Password must contain 8-128 characters.';
         }
 
         if (form.password !== form.confirmPassword) {
@@ -240,7 +240,7 @@ export default function FacultyManagement({ token }) {
                 {loading ? (
                     <div className="empty-state">
                         <RefreshCw size={24} />
-                        <span>Loading faculty records…</span>
+                        <span>Loading faculty records...</span>
                     </div>
                 ) : faculty.length === 0 ? (
                     <div className="empty-state">
@@ -281,7 +281,7 @@ export default function FacultyManagement({ token }) {
                                             </div>
                                         </td>
 
-                                        <td>{item.email || '—'}</td>
+                                        <td>{item.email || '-'}</td>
 
                                         <td>
                                             <span className="faculty-department">
@@ -290,7 +290,7 @@ export default function FacultyManagement({ token }) {
                                             </span>
                                         </td>
 
-                                        <td>{item.designation || '—'}</td>
+                                        <td>{item.designation || '-'}</td>
 
                                         <td>
                                             <span className={`status-pill ${item.status === 'active' ? 'success' : 'muted'}`}>
@@ -448,7 +448,7 @@ export default function FacultyManagement({ token }) {
                                     className="primary-button admin-submit-button"
                                     disabled={saving}
                                 >
-                                    {saving ? 'Creating…' : 'Create Faculty Account'}
+                                    {saving ? 'Creating...' : 'Create Faculty Account'}
                                 </button>
                             </div>
                         </form>
