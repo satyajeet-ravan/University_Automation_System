@@ -801,6 +801,18 @@ export default function App() {
     );
   }
 
+  // Courses of the chosen semester that are not selected yet.
+  function remainingEnrollmentCourses() {
+    return enrollmentCourses().filter(
+      course =>
+        !studentForm.enrollments.some(
+          item =>
+            item.course_id === course.id &&
+            item.semester_id === enrollSemesterId
+        )
+    );
+  }
+
   function chooseEnrollmentBranch(value) {
     setEnrollBranch(value);
 
@@ -2825,56 +2837,49 @@ export default function App() {
                   </div>
 
                   {enrollSemesterId && (
-                    <div className="student-enrollment-courses">
+                    <div className="student-enrollment-add">
+                      <label htmlFor="enrollment-course">Course</label>
+
                       {enrollmentCourses().length === 0 ? (
                         <p className="muted">
                           No courses are listed for this branch and semester.
                         </p>
                       ) : (
-                        <>
-                          <div className="student-enrollment-bulk">
-                            <button
-                              type="button"
-                              className="secondary-button"
-                              onClick={() => setAllStudentEnrollments(true)}
-                            >
-                              Select all
-                            </button>
-                            <button
-                              type="button"
-                              className="secondary-button"
-                              onClick={() => setAllStudentEnrollments(false)}
-                            >
-                              Clear
-                            </button>
-                          </div>
-
-                          {enrollmentCourses().map(course => (
-                            <label
-                              className="student-enrollment-course"
-                              key={course.id}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={studentForm.enrollments.some(
-                                  item =>
-                                    item.course_id === course.id &&
-                                    item.semester_id === enrollSemesterId
-                                )}
-                                onChange={event =>
-                                  toggleStudentEnrollment(
-                                    course.id,
-                                    event.target.checked
-                                  )
-                                }
-                              />
-                              <span>
+                        <div className="student-enrollment-add-row">
+                          <select
+                            id="enrollment-course"
+                            value=""
+                            onChange={event => {
+                              if (event.target.value) {
+                                toggleStudentEnrollment(
+                                  event.target.value,
+                                  true
+                                );
+                              }
+                            }}
+                          >
+                            <option value="">
+                              {remainingEnrollmentCourses().length
+                                ? 'Add a course'
+                                : 'All courses added'}
+                            </option>
+                            {remainingEnrollmentCourses().map(course => (
+                              <option value={course.id} key={course.id}>
                                 {course.name}
                                 {course.code ? ` (${course.code})` : ''}
-                              </span>
-                            </label>
-                          ))}
-                        </>
+                              </option>
+                            ))}
+                          </select>
+
+                          <button
+                            type="button"
+                            className="secondary-button"
+                            disabled={!remainingEnrollmentCourses().length}
+                            onClick={() => setAllStudentEnrollments(true)}
+                          >
+                            Add all
+                          </button>
+                        </div>
                       )}
                     </div>
                   )}
