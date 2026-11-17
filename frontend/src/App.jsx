@@ -47,6 +47,49 @@ function EmptyPortalPanel({
   );
 }
 
+// Crops to a centered square and shrinks the photo so uploads stay small.
+function prepareProfilePhoto(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+      const size = Math.min(512, image.width, image.height);
+      const side = Math.min(image.width, image.height);
+      const canvas = document.createElement('canvas');
+
+      canvas.width = size;
+      canvas.height = size;
+
+      canvas
+        .getContext('2d')
+        .drawImage(
+          image,
+          (image.width - side) / 2,
+          (image.height - side) / 2,
+          side,
+          side,
+          0,
+          0,
+          size,
+          size
+        );
+
+      URL.revokeObjectURL(url);
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      resolve(dataUrl.slice(dataUrl.indexOf(',') + 1));
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('That file could not be read as an image.'));
+    };
+
+    image.src = url;
+  });
+}
+
 function semesterName(semester) {
   if (!semester) return 'Semester';
 
@@ -329,6 +372,8 @@ export default function App() {
   const [studentRecord, setStudentRecord] = useState(null);
   const [studentRecordLoading, setStudentRecordLoading] = useState(false);
   const [studentRefresh, setStudentRefresh] = useState(0);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState('');
   const [studentRecordError, setStudentRecordError] = useState('');
   const [phoneDraft, setPhoneDraft] = useState('');
   const [phoneError, setPhoneError] = useState('');
@@ -685,6 +730,66 @@ export default function App() {
       setPhoneError(e.message);
     } finally {
       setPhoneSaving(false);
+    }
+  }
+
+  async function changeStudentPhoto(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+
+    if (!file) return;
+
+    setPhotoError('');
+
+    if (!file.type.startsWith('image/')) {
+      setPhotoError('Choose an image file.');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setPhotoError('Choose an image smaller than 10 MB.');
+      return;
+    }
+
+    setPhotoBusy(true);
+
+    try {
+      const data = await prepareProfilePhoto(file);
+      const result = await apiRequest('/profile/me/photo', {
+        token: session.access_token,
+        method: 'PUT',
+        body: JSON.stringify({ data })
+      });
+
+      setStudentRecord(current =>
+        current ? { ...current, photo_url: result.photo_url } : current
+      );
+    } catch (e) {
+      setPhotoError(e.message);
+    } finally {
+      setPhotoBusy(false);
+    }
+  }
+
+  async function removeStudentPhoto() {
+    if (!window.confirm('Remove your profile photo?')) return;
+
+    setPhotoError('');
+    setPhotoBusy(true);
+
+    try {
+      await apiRequest('/profile/me/photo', {
+        token: session.access_token,
+        method: 'DELETE'
+      });
+
+      setStudentRecord(current =>
+        current ? { ...current, photo_url: null } : current
+      );
+    } catch (e) {
+      setPhotoError(e.message);
+    } finally {
+      setPhotoBusy(false);
     }
   }
 
@@ -1698,9 +1803,13 @@ export default function App() {
         <div className="sidebar-bottom">
           <div className="user-chip">
             <div className="avatar">
-              {(profile?.full_name || session.user.email || 'U')
-                .slice(0, 1)
-                .toUpperCase()}
+              {isActiveStudent && studentRecord?.photo_url ? (
+                <img src={studentRecord.photo_url} alt="" />
+              ) : (
+                (profile?.full_name || session.user.email || 'U')
+                  .slice(0, 1)
+                  .toUpperCase()
+              )}
             </div>
 
             <div className="user-meta">
@@ -2333,6 +2442,58 @@ export default function App() {
               <div className="alert error">{studentRecordError}</div>
             ) : studentRecord ? (
               <>
+                <div className="profile-photo-card">
+                  <div className="profile-photo">
+                    {studentRecord.photo_url ? (
+                      <img src={studentRecord.photo_url} alt="Your profile" />
+                    ) : (
+                      <span>
+                        {(studentRecord.full_name || 'S').slice(0, 1).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="profile-photo-actions">
+                    <strong>Profile photo</strong>
+                    <small className="muted">
+                      JPEG, PNG or WebP. It is cropped to a square.
+                    </small>
+
+                    <div className="row-actions">
+                      <label
+                        className={`secondary-button photo-upload ${photoBusy ? 'disabled' : ''}`}
+                      >
+                        {photoBusy
+                          ? 'Working...'
+                          : studentRecord.photo_url
+                            ? 'Change photo'
+                            : 'Upload photo'}
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          disabled={photoBusy}
+                          onChange={changeStudentPhoto}
+                        />
+                      </label>
+
+                      {studentRecord.photo_url && (
+                        <button
+                          type="button"
+                          className="reject-button"
+                          disabled={photoBusy}
+                          onClick={removeStudentPhoto}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    {photoError && (
+                      <small className="field-error">{photoError}</small>
+                    )}
+                  </div>
+                </div>
+
                 <div className="profile-grid">
                   <div className="profile-field">
                     <span>Student ID</span>
