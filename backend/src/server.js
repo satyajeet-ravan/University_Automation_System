@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -5,7 +7,29 @@ import { config, isAllowedOrigin } from './config.js';
 import routes from './routes.js';
 
 const app = express();
-app.use(helmet());
+
+// The built frontend can be served by this same server, giving a single link.
+const frontendDist = fileURLToPath(new URL('../../frontend/dist', import.meta.url));
+const serveFrontend = existsSync(`${frontendDist}/index.html`);
+
+// Supabase is called from the browser (sign-in, photos), so allow it explicitly.
+const supabaseHost = config.supabaseUrl ? new URL(config.supabaseUrl).host : '*.supabase.co';
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+      imgSrc: ["'self'", 'data:', 'blob:', `https://${supabaseHost}`],
+      connectSrc: ["'self'", `https://${supabaseHost}`, `wss://${supabaseHost}`],
+      objectSrc: ["'none'"],
+      frameAncestors: ["'self'"],
+      upgradeInsecureRequests: null
+    }
+  }
+}));
 app.use(cors({
   origin(origin, callback) {
     callback(null, isAllowedOrigin(origin));
@@ -13,6 +37,14 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '1mb' }));
 app.use('/api', routes);
+
+if (serveFrontend) {
+  app.use(express.static(frontendDist));
+  // Any other page is the single-page app; the router in the browser handles it.
+  app.get(/^\/(?!api(\/|$)).*/, (_req, res) => {
+    res.sendFile(`${frontendDist}/index.html`);
+  });
+}
 app.use((err, req, res, _next) => {
   if (err?.type === 'entity.parse.failed') {
     return res.status(400).json({ error: 'Request body must contain valid JSON.' });
