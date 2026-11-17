@@ -6006,3 +6006,61 @@ html {
   margin: 8px 0 0;
   padding-left: 18px;
 }
+
+/* Student enrollment picker */
+.student-enrollment-pickers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.student-enrollment-courses {
+  display: grid;
+  gap: 6px;
+  max-height: 260px;
+  margin-top: 12px;
+  padding: 10px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--subtle);
+}
+
+.student-enrollment-bulk {
+  display: flex;
+  gap: 8px;
+}
+
+.student-enrollment-course {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.student-modal .student-enrollment-course input[type="checkbox"] {
+  width: auto;
+  min-height: 0;
+  margin: 0;
+}
+
+.student-enrollment-summary {
+  margin-top: 12px;
+}
+
+.chip-remove {
+  margin-left: 6px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .student-enrollment-pickers {
+    grid-template-columns: 1fr;
+  }
+}
