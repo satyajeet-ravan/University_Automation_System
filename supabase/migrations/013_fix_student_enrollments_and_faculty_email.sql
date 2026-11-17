@@ -27,7 +27,10 @@ BEGIN
     ALTER TABLE public.student_semester_enrollments
       ADD CONSTRAINT student_enrollments_student_fk
       FOREIGN KEY (student_id)
-      REFERENCES public.students(id) ON DELETE RESTRICT;
+      REFERENCES public.students(id) ON DELETE RESTRICT
+      -- NOT VALID: enforce the link for new and changed rows only. Older rows
+      -- that point at students deleted long ago are left untouched, not deleted.
+      NOT VALID;
   END IF;
 
   IF NOT EXISTS (
