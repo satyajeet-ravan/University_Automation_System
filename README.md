@@ -32,6 +32,7 @@ Stack: React + Vite + CSS, Node.js + Express, Supabase Auth + PostgreSQL.
 - Review `supabase/migrations/008_academic_management.sql` against the deployed schema and back up the database before applying it manually. It is not applied by the application or build.
 - `006_pending_student_id_correction.sql` is retained as migration history because it may already have been applied. Do not apply it on a new installation. Migration 007 safely removes its obsolete correction RPC if present and leaves any existing profile Student ID uniqueness index intact. Do not delete migration 006 or manually reverse its database changes.
 - Run migrations `009` through `013` in order (faculty module, course-faculty assignments, faculty attendance, course-semester assignments, and the enrollment/faculty-email fix). Migration `013` is required for student course enrollments to save; it is idempotent and preserves existing rows.
+- Optionally load the branch curriculum (about 380 courses for EE, EL, CE, IT and ET, mapped to semesters 1 to 8) with `cd backend && npm run seed:curriculum` (add `-- --dry` to preview). It only adds missing courses and semester assignments. The data comes from https://github.com/aitwehrrg/Vijitedia.
 - Create the first Admin account through Supabase Auth, then follow the controlled provisioning instructions in `docs/ADMIN_SETUP.md`.
 - Do not make Admin provisioning publicly accessible.
 
