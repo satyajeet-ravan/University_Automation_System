@@ -119,7 +119,7 @@ test('academic year creation validates dates and normalizes year code', async ()
     const invalid = await fetch(`${baseUrl}/years`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ year_code: '2026-27', label: '2026–2027', start_date: '2026-02-30', end_date: '2027-01-01' })
+      body: JSON.stringify({ year_code: '2026-27', label: '2026-2027', start_date: '2026-02-30', end_date: '2027-01-01' })
     });
     assert.equal(invalid.status, 400);
     assert.equal(db.calls.length, 0);
