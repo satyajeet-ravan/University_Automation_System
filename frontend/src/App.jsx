@@ -328,6 +328,7 @@ export default function App() {
   const [view, setView] = useState('dashboard');
   const [studentRecord, setStudentRecord] = useState(null);
   const [studentRecordLoading, setStudentRecordLoading] = useState(false);
+  const [studentRefresh, setStudentRefresh] = useState(0);
   const [studentRecordError, setStudentRecordError] = useState('');
   const [phoneDraft, setPhoneDraft] = useState('');
   const [phoneError, setPhoneError] = useState('');
@@ -460,7 +461,7 @@ export default function App() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.id, profile?.role, profile?.account_status]);
+  }, [profile?.id, profile?.role, profile?.account_status, studentRefresh]);
 
   useEffect(() => {
     if (
@@ -502,7 +503,7 @@ export default function App() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, profile?.id, profile?.role, profile?.account_status]);
+  }, [view, profile?.id, profile?.role, profile?.account_status, studentRefresh]);
 
   async function loadProfile(token) {
     setProfileLoading(true);
@@ -1739,7 +1740,10 @@ export default function App() {
               className="icon-button"
               title="Refresh profile"
               aria-label="Refresh profile"
-              onClick={() => loadProfile(session.access_token)}
+              onClick={() => {
+                loadProfile(session.access_token);
+                setStudentRefresh(value => value + 1);
+              }}
             >
               <RefreshCw size={17} />
             </button>
