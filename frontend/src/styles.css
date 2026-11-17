@@ -6318,3 +6318,25 @@ html {
     text-align: left;
   }
 }
+
+.exam-modal label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.exam-modal .exam-form-grid > div {
+  min-width: 0;
+}
+
+.exam-schedule input[type="date"],
+.exam-schedule input[type="time"] {
+  min-height: 38px !important;
+  padding: 6px 10px !important;
+}
+
+.exam-modal .table-wrap {
+  max-height: 340px;
+  overflow: auto;
+}
