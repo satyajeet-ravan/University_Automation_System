@@ -9,6 +9,7 @@ import {
   EXAM_TYPES,
   FEEDBACK_CRITERIA,
   FEEDBACK_LEVELS,
+  isLabCourse,
   normalizeRatings,
   shortTime,
   validDate,
@@ -677,7 +678,9 @@ export function createExamFeedbackRouter(db, photoHandlers) {
 
     res.json({
       round: roundSummary(round, submission, scope.subjects.length),
-      subjects: scope.subjects.map(item => ({
+      subjects: scope.subjects
+        .filter(item => !isLabCourse(item.course.code))
+        .map(item => ({
         course: item.course,
         exam_date: item.exam_date,
         start_time: shortTime(item.start_time),
@@ -805,13 +808,15 @@ export function createExamFeedbackRouter(db, photoHandlers) {
         exam_type: round.exam_type,
         semester_number: round.semester?.semester_number
       },
-      subjects: scope.subjects.map(item => ({
-        code: item.course.code,
-        title: item.course.name,
-        exam_date: item.exam_date,
-        start_time: item.start_time,
-        end_time: item.end_time
-      })),
+      subjects: scope.subjects
+        .filter(item => !isLabCourse(item.course.code))
+        .map(item => ({
+          code: item.course.code,
+          title: item.course.name,
+          exam_date: item.exam_date,
+          start_time: item.start_time,
+          end_time: item.end_time
+        })),
       photo: isSupportedPhoto ? photo : null
     });
 
