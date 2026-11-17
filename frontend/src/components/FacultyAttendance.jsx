@@ -542,7 +542,7 @@ export default function FacultyAttendance({ token }) {
                                                     <strong>{student.full_name}</strong>
                                                     <small>{student.email || 'No email available'}</small>
                                                 </td>
-                                                <td>{student.student_code || '—'}</td>
+                                                <td>{student.student_code || '-'}</td>
                                                 <td>
                                                     <select
                                                         value={student.attendance_status}
