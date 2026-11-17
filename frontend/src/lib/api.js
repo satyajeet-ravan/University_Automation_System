@@ -24,3 +24,23 @@ export async function apiRequest(path, { token, ...options } = {}) {
   }
   return data;
 }
+
+// Fetches a file (for example a PDF) with the signed-in user's token.
+export async function apiBlob(path, { token } = {}) {
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+  } catch {
+    throw new Error(`Could not reach the API at ${API_BASE}.`);
+  }
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data.error || `Request failed (${response.status})`);
+  }
+
+  return response.blob();
+}
