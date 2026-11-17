@@ -230,8 +230,10 @@ export default function AdminExamFeedback({ token }) {
 
     if (!validate()) return;
 
+    const visible = new Set(availableCourses.map(course => course.id));
+
     const subjects = Object.entries(form.schedule)
-      .filter(([, value]) => value.exam_date)
+      .filter(([courseId, value]) => value.exam_date && visible.has(courseId))
       .map(([courseId, value]) => ({ course_id: courseId, ...value }));
 
     setSaving(true);
@@ -334,7 +336,10 @@ export default function AdminExamFeedback({ token }) {
     }
   }
 
-  const availableCourses = semester?.courses || [];
+  // Laboratory courses (codes ending in L) have no written exam or hall ticket.
+  const availableCourses = (semester?.courses || []).filter(
+    course => !/L$/i.test(course.code || '')
+  );
 
   return (
     <section className="panel exam-feedback">
