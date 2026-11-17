@@ -6199,80 +6199,6 @@ html {
   margin: 28px 0 12px;
 }
 
-.feedback-card {
-  margin-bottom: 16px;
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-}
-
-.feedback-card-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--line);
-}
-
-.feedback-card-head small {
-  display: block;
-}
-
-.feedback-teacher {
-  color: var(--muted);
-  font-weight: 600;
-  text-align: right;
-}
-
-.feedback-row {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.feedback-criterion {
-  font-weight: 600;
-}
-
-.rating-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.rating-option {
-  padding: 7px 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--subtle);
-  color: var(--text);
-  font: inherit;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.rating-option:hover {
-  border-color: var(--blue);
-}
-
-.rating-option.selected {
-  border-color: var(--blue);
-  background: var(--blue);
-  color: #fff;
-  font-weight: 700;
-}
-
-.feedback-comment {
-  width: 100%;
-  margin-top: 12px;
-  resize: vertical;
-}
-
 .feedback-submit-bar {
   position: sticky;
   bottom: 0;
@@ -6303,20 +6229,15 @@ html {
 }
 
 @media (max-width: 720px) {
-  .exam-form-grid,
-  .feedback-row {
+  .exam-form-grid {
     grid-template-columns: 1fr;
   }
 
-  .feedback-card-head,
   .feedback-round-head,
   .feedback-done {
     flex-direction: column;
   }
 
-  .feedback-teacher {
-    text-align: left;
-  }
 }
 
 .exam-modal label {
@@ -6339,4 +6260,126 @@ html {
 .exam-modal .table-wrap {
   max-height: 340px;
   overflow: auto;
+}
+
+/* Student feedback matrix */
+.feedback-matrix-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.feedback-matrix {
+  width: 100%;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+}
+
+.feedback-matrix th,
+.feedback-matrix td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  text-align: center;
+}
+
+.feedback-matrix thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--subtle);
+  border-bottom: 2px solid var(--line);
+  font-size: 12px;
+  line-height: 1.4;
+  vertical-align: bottom;
+}
+
+.feedback-matrix tbody tr:nth-child(odd) td {
+  background: var(--subtle);
+}
+
+.feedback-matrix .fm-no {
+  width: 56px;
+  min-width: 56px;
+  color: var(--muted);
+}
+
+.feedback-matrix .fm-question {
+  width: 300px;
+  min-width: 260px;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.feedback-matrix .fm-subject {
+  min-width: 170px;
+}
+
+.feedback-matrix .fm-subject > * {
+  display: block;
+}
+
+.feedback-matrix .fm-code {
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.feedback-matrix .fm-teacher,
+.feedback-matrix .fm-exam {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.feedback-matrix .fm-cell {
+  min-width: 170px;
+}
+
+.feedback-matrix select,
+.feedback-matrix textarea {
+  width: 100%;
+  min-height: 38px;
+  font-size: 13px;
+}
+
+.feedback-matrix textarea {
+  resize: vertical;
+}
+
+.feedback-matrix select.answered {
+  border-color: var(--blue);
+  font-weight: 600;
+}
+
+.feedback-matrix tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.feedback-legend {
+  margin: 0 0 16px;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 4px 24px;
+  font-size: 12px;
+}
+
+@media (min-width: 1200px) {
+  .feedback-matrix {
+    min-width: 100%;
+  }
+}
+
+.feedback-submit-bar > span {
+  white-space: nowrap;
+}
+
+.feedback-submit-bar .primary-button {
+  width: auto;
+  min-width: 200px;
+  flex: 0 0 auto;
 }
