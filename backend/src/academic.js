@@ -296,7 +296,7 @@ async function validateReferences(db, resource, values, recordId) {
     if (data) {
       return {
         status: 409,
-        body: { error: 'Deactivate this academic year’s active semesters first.' }
+        body: { error: 'Deactivate this academic year\'s active semesters first.' }
       };
     }
   }
@@ -434,7 +434,7 @@ async function validateReferences(db, resource, values, recordId) {
       return {
         status: 409,
         body: {
-          error: 'Deactivate this course’s active subjects and offerings first.'
+          error: 'Deactivate this course\'s active subjects and offerings first.'
         }
       };
     }
