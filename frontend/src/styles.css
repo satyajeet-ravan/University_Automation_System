@@ -6418,3 +6418,110 @@ html {
   background-color: var(--field);
   color: var(--text);
 }
+
+/* ==========================================================================
+   Light theme corrections
+   Several later layout blocks were written with dark-only colours, so in light
+   mode the dashboard cards stayed dark and some headings became unreadable.
+   These rules restore light colours for the light theme only. The dark theme
+   is not touched.
+   ========================================================================== */
+
+.app-shell[data-theme="light"] .dashboard-content {
+    color: var(--text);
+}
+
+.app-shell[data-theme="light"] .dashboard-stat-card,
+.app-shell[data-theme="light"] .workspace-link {
+    background: var(--surface);
+    border-color: var(--line);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+
+.app-shell[data-theme="light"] .dashboard-stat-card:hover,
+.app-shell[data-theme="light"] .workspace-link:hover {
+    background: #f6f8ff;
+    border-color: #aab9f2;
+}
+
+.app-shell[data-theme="light"] .dashboard-stat-card h3,
+.app-shell[data-theme="light"] .dashboard-stat-card strong,
+.app-shell[data-theme="light"] .workspace-link strong {
+    color: var(--text);
+}
+
+.app-shell[data-theme="light"] .dashboard-stat-card p,
+.app-shell[data-theme="light"] .dashboard-stat-card span,
+.app-shell[data-theme="light"] .dashboard-stat-card small,
+.app-shell[data-theme="light"] .workspace-link small {
+    color: var(--muted);
+}
+
+.app-shell[data-theme="light"] .dashboard-stat-card .stat-icon.purple {
+    background: #f0eaff;
+    color: #7852bc;
+}
+
+.app-shell[data-theme="light"] .workspace-overview h2 {
+    color: var(--text);
+}
+
+.app-shell[data-theme="light"] .workspace-overview p {
+    color: var(--muted);
+}
+
+.app-shell[data-theme="light"] .workspace-link-icon {
+    background: #e9efff;
+    color: #3157c8;
+}
+
+.app-shell[data-theme="light"] .workspace-link>svg:last-child {
+    color: var(--muted);
+}
+
+/* Faculty attendance fields */
+.app-shell[data-theme="light"] .faculty-attendance input,
+.app-shell[data-theme="light"] .faculty-attendance textarea,
+.app-shell[data-theme="light"] .faculty-attendance select {
+    color: var(--text) !important;
+    -webkit-text-fill-color: var(--text);
+    caret-color: var(--text);
+    background-color: var(--field);
+    border-color: var(--line);
+}
+
+.app-shell[data-theme="light"] .faculty-attendance input::placeholder,
+.app-shell[data-theme="light"] .faculty-attendance textarea::placeholder {
+    color: var(--muted) !important;
+    -webkit-text-fill-color: var(--muted);
+}
+
+.app-shell[data-theme="light"] .faculty-attendance input:focus,
+.app-shell[data-theme="light"] .faculty-attendance textarea:focus,
+.app-shell[data-theme="light"] .faculty-attendance select:focus {
+    color: var(--text) !important;
+    -webkit-text-fill-color: var(--text);
+}
+
+.app-shell[data-theme="light"] .faculty-attendance input:disabled,
+.app-shell[data-theme="light"] .faculty-attendance textarea:disabled,
+.app-shell[data-theme="light"] .faculty-attendance select:disabled {
+    color: var(--muted) !important;
+    -webkit-text-fill-color: var(--muted);
+    background-color: var(--subtle);
+}
+
+/* Add Student dialog had no panel behind it in light mode */
+.app-shell[data-theme="light"] .student-modal:not(.admin-modal) {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 24px 70px #14264c33;
+}
+
+.app-shell[data-theme="light"] .empty-state {
+    color: var(--muted);
+}
